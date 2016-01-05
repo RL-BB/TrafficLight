@@ -1,0 +1,33 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:trafficLight"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:pi="http://schemas.microsoft.com/prototyping/2010/interactivity" x:Class="trafficLight.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="491.346" Width="795.577">
+    <Grid>
+        <Grid x:Name="gridTrafficLight" HorizontalAlignment="Right" Margin="0,30,249,0" VerticalAlignment="Top" Height="239" Width="342">
+            <Ellipse   x:Name="redLight" HorizontalAlignment="Left" Height="51" Margin="35,136,0,0" Stroke="Red" VerticalAlignment="Top" Width="51" Fill="Red" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <pi:ActivateStateAction/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Ellipse>
+            <Ellipse   x:Name="yellowLight" HorizontalAlignment="Left" Height="51" Margin="86,136,0,0" Stroke="Yellow" VerticalAlignment="Top" Width="51" Fill="Yellow"/>
+            <Ellipse   x:Name="greenLight" Fill="Lime" HorizontalAlignment="Left" Height="51" Margin="137,136,0,0" VerticalAlignment="Top" Width="51">
+                <Ellipse.Stroke>
+                    <ImageBrush/>
+                </Ellipse.Stroke>
+            </Ellipse>
+            <TextBlock x:Name="tBk0"  HorizontalAlignment="Left" Margin="35,40,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="80" FontWeight="Bold" FontStretch="Expanded" IsEnabled="False" Foreground="Red" Text="000" TextAlignment="Center" LineHeight="18.667" Width="153"/>
+            <Button x:Name="btnCompany"  Content="伴随模式" HorizontalAlignment="Center" Height="29" Margin="244,111,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button x:Name="btnGreenFirst"  Content="绿灯优先" HorizontalAlignment="Center" Height="29" Margin="244,154,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button x:Name="btnOpen"  Content="开启信号asd" HorizontalAlignment="Center" Height="29" Margin="244,69,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnOpen_Click"/>
+        </Grid>
+        <TextBlock x:Name="tBkCount" HorizontalAlignment="Left" Margin="388,30,0,0" TextWrapping="Wrap" Text="888"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="32" FontWeight="Bold" FontStretch="Expanded" TextAlignment="Center" Visibility="Visible"/>
+
+    </Grid>
+</Window>
