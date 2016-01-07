@@ -38,20 +38,20 @@ namespace trafficLight
         /// </summary>
         public static int gLNumTb;
 
+        //窗口初始化时 bool变量默认值为false
+        private bool firstClick;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            
+
             mainTimerTb.Text = "110";
             halfSencondTimerTb.Text = "114";
-            mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
+            //mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
+            //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
             mainTimerTb.ToolTip = mainTimerTb.Text.ToString();
             halfSencondTimerTb.ToolTip = halfSencondTimerTb.Text.ToString();
-
-
-
             //LightWaitTime();
         }
 
@@ -63,7 +63,7 @@ namespace trafficLight
             totalCycleTimer.Tick += totalCycleTimer_Tick;
             //红灯30s+黄灯5s+绿灯15s=50，参数里直接写数字不合适，应该用有内涵的param代替
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
-            totalCycleTimer.Interval = TimeSpan.FromMilliseconds((rLNumTb + yLNumTb + gLNumTb)*1000+1000);
+            totalCycleTimer.Interval = TimeSpan.FromMilliseconds((rLNumTb + yLNumTb + gLNumTb) * 1000 + 1000);
 
             halfSecondCycleTimer.Start();
             halfSecondCycleTimer.Tick += halfSecondCycleTimer_Tick;
@@ -85,26 +85,28 @@ namespace trafficLight
         }
         private void halfSecondCycleTimer_Tick(object sender, EventArgs e)
         {
-            mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
-            halfSecondCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);           
+            //mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
+            //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
+            halfSecondCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);
         }
         #endregion
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
-            //后期必须优化，防止多次Click事件
-            //先判断线程是否在运行 如果在运行 messgebox.show(已开始运行交通灯),MessageBox.Show(请勿多次点击），否则开始运行
-            LightWaitTime();
-
-            //if (!halfSecondCycleTimer.IsEnabled && !totalCycleTimer.IsEnabled)
+            //运算符的优先级 ！和&&
+            //IsEnable：当计时器.start()之后IsEnable==False，计时器.stop()后IsEnable==Ture
+            //if ((totalCycleTimer.IsEnabled) && (halfSecondCycleTimer.IsEnabled))
             //{
-            //    LightWaitTime();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("请勿多次点击“开始”");
-            //}
+            int i = 0;
+            if (!firstClick)
+            {
+                LightWaitTime();
+                firstClick = !false;
+            }
+            else
+            {
+                MessageBox.Show(mainWindow, "请勿多次单击\"'开始'\"按键");
+            }
         }
         /// <summary>
         /// 微循环（0.5s）的动作
@@ -222,16 +224,16 @@ namespace trafficLight
         {
             halfSecondCycleTimer.IsEnabled = false;
             totalCycleTimer.IsEnabled = false;
-            mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Dis" : "En").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Dis" : "En").ToString();
+            mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
         }
 
         private void btnEnableTimer_Click(object sender, RoutedEventArgs e)
         {
-            halfSecondCycleTimer.IsEnabled = false;
-            totalCycleTimer.IsEnabled = false;
-             mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Dis" : "En").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Dis" : "En").ToString();
+            halfSecondCycleTimer.IsEnabled = !false;
+            totalCycleTimer.IsEnabled = !false;
+            mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
         }
     }
 }

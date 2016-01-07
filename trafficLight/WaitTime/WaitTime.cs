@@ -83,31 +83,8 @@ namespace trafficLight
         /// <summary>
         /// flicker ['flɪkɚ] 闪烁，闪光 倒计时文本闪烁倒计时，每0.5s一次
         /// </summary>
-        public const byte lightFlicker = 10;
+        public static int lightFlicker;
         #endregion
-
-        #region FromRgb(r,g,b)中的变量 可优化
-        ////TextBlock中字体颜色的组成FromGrb(r,g,b)
-        //public static byte textFontColorR;
-        //public static byte textFontColorG;
-        //public static byte textFontColorB;
-
-        ////红灯的颜色变化
-        //public static byte redLightColorR;
-        //public static byte redLightColorG;
-        //public static byte redLightColorB;
-
-        ////黄灯的颜色变化
-        //public static byte yellowLightColorR;
-        //public static byte yellowLightColorG;
-        //public static byte yellowLightColorB;
-
-        ////绿灯的颜色变化
-        //public static byte greenLightColorR;
-        //public static byte greenLightColorG;
-        //public static byte greenLightColorB;
-        #endregion
-
 
         /// <summary>
         /// 初始化 计时器num
