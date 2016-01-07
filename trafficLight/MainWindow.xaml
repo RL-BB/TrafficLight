@@ -8,26 +8,53 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="491.346" Width="795.577">
     <Grid>
-        <Grid x:Name="gridTrafficLight" HorizontalAlignment="Right" Margin="0,30,249,0" VerticalAlignment="Top" Height="239" Width="342">
-            <Ellipse   x:Name="redLight" HorizontalAlignment="Left" Height="51" Margin="35,136,0,0" Stroke="Red" VerticalAlignment="Top" Width="51" Fill="Red" >
+        <Grid x:Name="gridTrafficLight" HorizontalAlignment="Right" Margin="0,42,141,0" VerticalAlignment="Top" Height="272" Width="415">
+            <Ellipse   x:Name="redLight" HorizontalAlignment="Left" Height="51" Margin="14,142,0,0" Stroke="Red" VerticalAlignment="Top" Width="51" Fill="Red" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeftButtonDown">
                         <pi:ActivateStateAction/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Ellipse>
-            <Ellipse   x:Name="yellowLight" HorizontalAlignment="Left" Height="51" Margin="86,136,0,0" Stroke="Yellow" VerticalAlignment="Top" Width="51" Fill="Yellow"/>
-            <Ellipse   x:Name="greenLight" Fill="Lime" HorizontalAlignment="Left" Height="51" Margin="137,136,0,0" VerticalAlignment="Top" Width="51">
+            <Ellipse   x:Name="yellowLight" HorizontalAlignment="Left" Height="51" Margin="65,142,0,0" Stroke="Yellow" VerticalAlignment="Top" Width="51" Fill="Yellow"/>
+            <Ellipse   x:Name="greenLight" Fill="Lime" HorizontalAlignment="Left" Height="51" Margin="116,142,0,0" VerticalAlignment="Top" Width="51">
                 <Ellipse.Stroke>
                     <ImageBrush/>
                 </Ellipse.Stroke>
             </Ellipse>
-            <TextBlock x:Name="tBk0"  HorizontalAlignment="Left" Margin="35,40,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="80" FontWeight="Bold" FontStretch="Expanded" IsEnabled="False" Foreground="Red" Text="000" TextAlignment="Center" LineHeight="18.667" Width="153"/>
-            <Button x:Name="btnCompany"  Content="伴随模式" HorizontalAlignment="Center" Height="29" Margin="244,111,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <Button x:Name="btnGreenFirst"  Content="绿灯优先" HorizontalAlignment="Center" Height="29" Margin="244,154,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <Button x:Name="btnOpen"  Content="开启信号asd" HorizontalAlignment="Center" Height="29" Margin="244,69,28,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnOpen_Click"/>
+            <TextBlock x:Name="tBk0"  HorizontalAlignment="Left" Margin="14,46,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="80" FontWeight="Bold" FontStretch="Expanded" IsEnabled="False" Foreground="Red" Text="000" TextAlignment="Center" LineHeight="18.667" Width="153"/>
+            <TextBlock x:Name="tBkCount" HorizontalAlignment="Left" Margin="19,12,0,0" TextWrapping="Wrap" Text="888"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="32" FontWeight="Bold" Visibility="Visible" Height="54" Width="148" TextAlignment="Center"/>
+
+            <Button x:Name="btnCompany"  Content="伴随模式" HorizontalAlignment="Left" Height="29" Margin="192,106,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button x:Name="btnDisableTimer"  Content="DisableTimer" HorizontalAlignment="Left" Height="29" Margin="283,52,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnDisableTimer_Click"/>
+            <Button x:Name="btnOpen"  Content="开始" HorizontalAlignment="Left" Height="29" Margin="192,52,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnOpen_Click"/>
+            <ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="192,158,0,0" VerticalAlignment="Top" Width="70"  SelectedIndex="0">
+                <ComboBoxItem Content="红" Name="red" Selected="LightSelected" />
+                <ComboBoxItem Content="黄" Name="yellow" Selected="LightSelected"/>
+                <ComboBoxItem Content="绿" Name="green" Selected="LightSelected"/>
+            </ComboBox>
+            <TextBox x:Name="redCount"  DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="14,202,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="51" TextAlignment="Center" FontSize="21.333" ToolTip="红灯倒计时时间设置"/>
+            <TextBlock x:Name="redIdentificastion"  HorizontalAlignment="Left" Height="25" Margin="19,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" Text="红" FontSize="20" TextAlignment="Center"/>
+            <TextBox x:Name="greenCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="116,202,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="51" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
+            <TextBlock x:Name="greenIdentificastion1" HorizontalAlignment="Left" Height="25" Margin="121,237,0,0" TextWrapping="Wrap" Text="绿" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
+            <TextBox x:Name="yellowCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="70,202,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="46" FontSize="21.333" TextAlignment="Center" ToolTip="黄灯倒计时时间设置"/>
+            <TextBlock x:Name="yellowIdentificastion" HorizontalAlignment="Left" Height="25" Margin="65,237,0,0" TextWrapping="Wrap" Text="黄" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
+            <TextBlock x:Name="mainTimerTb" HorizontalAlignment="Left" Margin="283,106,0,0" TextWrapping="Wrap" Text="主T：Closed"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="18.667" FontWeight="Bold" Visibility="Visible" Height="29" Width="122" TextAlignment="Center"/>
+            <TextBlock x:Name="halfSencondTimerTb" HorizontalAlignment="Left" Margin="283,158,0,0" TextWrapping="Wrap" Text="副T：Closed"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="18.667" FontWeight="Bold" Visibility="Visible" Height="29" Width="122" TextAlignment="Center"/>
+            <Button x:Name="btnEnableTimer"  Content="EnableTimer" HorizontalAlignment="Left" Height="29" Margin="283,18,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnEnableTimer_Click"/>
+
         </Grid>
-        <TextBlock x:Name="tBkCount" HorizontalAlignment="Left" Margin="388,30,0,0" TextWrapping="Wrap" Text="888"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="32" FontWeight="Bold" FontStretch="Expanded" TextAlignment="Center" Visibility="Visible"/>
+        <!--<ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="593,133,0,0" VerticalAlignment="Top" Width="78"  SelectedIndex="0">
+            <ComboBoxItem Content="红" Name="red" Selected="LightSelected" />
+            <ComboBoxItem Content="黄" Name="yellow" Selected="LightSelected"/>
+            <ComboBoxItem Content="绿" Name="green" Selected="LightSelected"/>
+        </ComboBox>
+        <TextBox x:Name="redCount"  DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="584,80,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="63" TextAlignment="Center" FontSize="21.333" ToolTip="红灯倒计时时间设置"/>
+        <TextBlock x:Name="redIdentificastion"  HorizontalAlignment="Left" Height="25" Margin="584,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" Text="红" FontSize="20" TextAlignment="Center"/>
+        <TextBox x:Name="greenCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="709,80,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="56" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
+        <TextBlock x:Name="greenIdentificastion1" HorizontalAlignment="Left" Height="25" Margin="719,50,0,0" TextWrapping="Wrap" Text="绿" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
+        <TextBox x:Name="yellowCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="647,80,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="57" FontSize="21.333" TextAlignment="Center" ToolTip="黄灯倒计时时间设置"/>
+        <TextBlock x:Name="yellowIdentificastion" HorizontalAlignment="Left" Height="25" Margin="657,50,0,0" TextWrapping="Wrap" Text="黄" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>-->
 
     </Grid>
 </Window>
