@@ -97,7 +97,7 @@ namespace trafficLight
             WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
             //WaitTime.SetNumForCycleCount(30, 5, 15);
             //mainTimerCount++;
-            mainTimerTb.Text="mainTick次数："+(++mainTimerCount).ToString()+"；"+"mainInterval："+WaitTime.trafficLightsTime;
+            mainTimerTb.Text = "mainTick次数：" + (++mainTimerCount).ToString() + "；" + "mainInterval：" + WaitTime.trafficLightsTime;
 
         }
         private void unitCycleTimer_Tick(object sender, EventArgs e)
@@ -180,7 +180,7 @@ namespace trafficLight
         /// 停止计时器 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会发生
         /// </summary>
         private void StopTimer()
-                   {
+        {
             //***比较Timer.IsEnable=False和Timer.stop()***
 
             //unitCycleTimer.Dispatcher.Thread.Abort();
@@ -195,7 +195,7 @@ namespace trafficLight
             unitCycleTimer.IsEnabled = !false;
             mainCycleTimer.IsEnabled = !false;
         }
-                
+
 
         /// <summary>
         /// ComboBox中选择某种颜色的灯的时候开始
@@ -286,7 +286,7 @@ namespace trafficLight
         {
             //if (!firstClick)
             //{
-                tempTextRedBefore = redCount.Text;
+            tempTextRedBefore = redCount.Text;
             //}
         }
         /// <summary>
@@ -305,7 +305,7 @@ namespace trafficLight
         }
 
 
-        private bool IsTextChanged(string textBefore,string textAfter)
+        private bool IsTextChanged(string textBefore, string textAfter)
         {
             bool isChanged = false;
             if (IsInputTextSuitable(textAfter))
@@ -318,8 +318,7 @@ namespace trafficLight
             else
             {
                 MessageBox.Show("报警：110！");
-                                                                                                                                }
-            
+            }
             return isChanged;
         }
 
