@@ -22,21 +22,25 @@ namespace trafficLight
     /// </summary>
     public partial class MainWindow : Window
     {
-        //两个个计时器 
-        public DispatcherTimer totalCycleTimer = new DispatcherTimer();
-        public DispatcherTimer halfSecondCycleTimer = new DispatcherTimer();
+        //两个个计时器数组，分别都含有四个元素
+        //0对应btnOPen_Click事件开启的计时器，
+        //public DispatcherTimer[] mainCycleTimer;
+        //public DispatcherTimer[] unitCycleTimer;
+        public DispatcherTimer mainCycleTimer = new DispatcherTimer();
+        public DispatcherTimer unitCycleTimer = new DispatcherTimer();
+
         /// <summary>
         /// 红灯倒计时时间输入值，默认为30
         /// </summary>
-        public static int rLNumTb;
+        public static int rLNumTbx;
         /// <summary>
         /// 黄灯倒计时时间输入值，默认为5
         /// </summary>
-        public static int yLNumTb;
+        public static int yLNumTbx;
         /// <summary>
         /// 绿灯倒计时时间输入值，默认为15s
         /// </summary>
-        public static int gLNumTb;
+        public static int gLNumTbx;
 
         //窗口初始化时 bool变量默认值为false
         private bool firstClick;
@@ -44,7 +48,6 @@ namespace trafficLight
         public MainWindow()
         {
             InitializeComponent();
-
 
             mainTimerTb.Text = "110";
             halfSencondTimerTb.Text = "114";
@@ -55,41 +58,37 @@ namespace trafficLight
             //LightWaitTime();
         }
 
-        #region 灯、计时器、颜色变化
-        void LightWaitTime()
+        void RunTrafficLight()
         {
-            InitialPerLightTime();
-            totalCycleTimer.Start();
-            totalCycleTimer.Tick += totalCycleTimer_Tick;
+            InitialPerLightRunTime();
+            mainCycleTimer.Start();
+            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
             //红灯30s+黄灯5s+绿灯15s=50，参数里直接写数字不合适，应该用有内涵的param代替
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
-            totalCycleTimer.Interval = TimeSpan.FromMilliseconds((rLNumTb + yLNumTb + gLNumTb) * 1000 + 1000);
+            mainCycleTimer.Interval = TimeSpan.FromMilliseconds((rLNumTbx + yLNumTbx + gLNumTbx) * 1000 + 1000);
 
-            halfSecondCycleTimer.Start();
-            halfSecondCycleTimer.Tick += halfSecondCycleTimer_Tick;
-            halfSecondCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
+
+            unitCycleTimer.Start();
+            unitCycleTimer.Tick += unitCycleTimer_Tick;
+            unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
         }
         /// <summary>
         /// 主计时器Tick事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void totalCycleTimer_Tick(object sender, EventArgs e)
+        private void mainCycleTimer_Tick(object sender, EventArgs e)
         {
-
-
-            WaitTime.SetNumForCycleCount(rLNumTb, yLNumTb, gLNumTb);
-
+            WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
             //WaitTime.SetNumForCycleCount(30, 5, 15);
 
         }
-        private void halfSecondCycleTimer_Tick(object sender, EventArgs e)
+        private void unitCycleTimer_Tick(object sender, EventArgs e)
         {
             //mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
             //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
             halfSecondCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);
         }
-        #endregion
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -97,10 +96,9 @@ namespace trafficLight
             //IsEnable：当计时器.start()之后IsEnable==False，计时器.stop()后IsEnable==Ture
             //if ((totalCycleTimer.IsEnabled) && (halfSecondCycleTimer.IsEnabled))
             //{
-            int i = 0;
             if (!firstClick)
             {
-                LightWaitTime();
+                RunTrafficLight();
                 firstClick = !false;
             }
             else
@@ -132,81 +130,87 @@ namespace trafficLight
         private void LighCount_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             StopTimer();
-            if (rLNumTb < 5)
+            if (rLNumTbx < 5)
             {
                 MessageBox.Show("不得小于5");
             }
-            else if (rLNumTb > 120)
+            else if (rLNumTbx > 120)
             {
                 MessageBox.Show("不得超过2min，应不超过120");
             }
             else
             {
-                ConfirmTimerIsEnableThenRestart();
+                ReInitializeParamThenRestart();
             }
 
-            if (yLNumTb < 5)
+            if (yLNumTbx < 5)
             {
                 MessageBox.Show("不得小于5");
             }
-            else if (yLNumTb > 120)
+            else if (yLNumTbx > 120)
             {
                 MessageBox.Show("不得超过2min，应不超过120");
             }
             else
             {
-                ConfirmTimerIsEnableThenRestart();
+                ReInitializeParamThenRestart();
+
             }
 
-            if (gLNumTb < 5)
+            if (gLNumTbx < 5)
             {
                 MessageBox.Show("不得小于5");
             }
-            else if (gLNumTb > 120)
+            else if (gLNumTbx > 120)
             {
                 MessageBox.Show("不得超过2min，应不超过120");
             }
             else
             {
-                ConfirmTimerIsEnableThenRestart();
+                ReInitializeParamThenRestart();
+
             }
         }
 
         /// <summary>
         /// 重启两个计时器（注意Timer.Start()的顺序，并确认之前的计时器已经关闭）
         /// </summary>
-        private void ConfirmTimerIsEnableThenRestart()
+        private void ReInitializeParamThenRestart()
         {
-            if (!totalCycleTimer.IsEnabled && !halfSecondCycleTimer.IsEnabled)
-            {
-                totalCycleTimer.Start();
-                halfSecondCycleTimer.Start();
-            }
-            else
-            {
-                MessageBox.Show("Timers is not ready，wait a moment");
-            }
-
+            //RunTrafficLight();
+            InitialPerLightRunTime();
+            WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
+            mainCycleTimer.Start();
+            unitCycleTimer.Start();
         }
-
         /// <summary>
-        /// 计时器.stop()---（注意Timer.stop()的顺序）
+        /// 停止计时器 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会发生
         /// </summary>
         private void StopTimer()
         {
-            halfSecondCycleTimer.Stop();
-            totalCycleTimer.Stop();
+            //***比较Timer.IsEnable=False和Timer.stop()***
+
+            //unitCycleTimer.Dispatcher.Thread.Abort();
+            unitCycleTimer.IsEnabled = false;
+            mainCycleTimer.IsEnabled = false;
+            //halfSecondCycleTimer.Stop();
+            //totalCycleTimer.Stop();
+
         }
+
         /// <summary>
         /// 初始化交通灯各倒计时时间
         /// </summary>
-        private void InitialPerLightTime()
+        private void InitialPerLightRunTime()
         {
             //待优化，输入的值： 判断为数字且为int类型
             //红灯和绿灯时间范围为15秒--2分钟，黄灯的时间范围为1秒--15秒
-            rLNumTb = Convert.ToInt32(redCount.Text.ToString());
-            yLNumTb = Convert.ToInt32(yellowCount.Text.ToString());
-            gLNumTb = Convert.ToInt32(greenCount.Text.ToString());
+            rLNumTbx = FetchNum(redCount.Text);
+            yLNumTbx = FetchNum(yellowCount.Text);
+            gLNumTbx = FetchNum(greenCount.Text);
+            //rLNumTb = Convert.ToInt32(redCount.Text);
+            //yLNumTb = Convert.ToInt32(yellowCount.Text);
+            //gLNumTb = Convert.ToInt32(greenCount.Text);
         }
 
         /// <summary>
@@ -216,24 +220,77 @@ namespace trafficLight
         /// <param name="e"></param>
         private void LightSelected(object sender, RoutedEventArgs e)
         {
-            StopTimer();
-            ConfirmTimerIsEnableThenRestart();
+            //if (firstClick)
+            //{
+                StopTimer();
+                ReInitializeParamThenRestart();
+            //}
+
         }
 
         private void btnDisableTimer_Click(object sender, RoutedEventArgs e)
         {
-            halfSecondCycleTimer.IsEnabled = false;
-            totalCycleTimer.IsEnabled = false;
-            mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+                                                
+
+            unitCycleTimer.Stop();
+            mainCycleTimer.Stop();
+            //halfSecondCycleTimer.IsEnabled = false;
+            //totalCycleTimer.IsEnabled = false;
+            mainTimerTb.Text = "主T：" + (mainCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+            halfSencondTimerTb.Text = "副T：" + (unitCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+
+            unitCycleTimer.Stop();
+            mainCycleTimer.Stop();
         }
 
         private void btnEnableTimer_Click(object sender, RoutedEventArgs e)
         {
-            halfSecondCycleTimer.IsEnabled = !false;
-            totalCycleTimer.IsEnabled = !false;
-            mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
-            halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+            //InitialPerLightRunTime();
+            //WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
+            //unitCycleTimer.IsEnabled = !false;
+            //mainCycleTimer.IsEnabled = !false;
+            //mainTimerTb.Text = "主T：" + (mainCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+            //halfSencondTimerTb.Text = "副T：" + (unitCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
+
+            ReInitializeParamThenRestart();
+        }
+
+        private int FetchNum(string tbText)
+        {
+            if (tbText == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(tbText);
+            }
+
+        }
+
+        private void SelectRed(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (firstClick)
+            {
+                StopTimer();
+                ReInitializeParamThenRestart();
+            }
+        }
+        private void SelectYellow(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (firstClick)
+            {
+                StopTimer();
+                ReInitializeParamThenRestart();
+            }
+        }
+        private void SelectGreen(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (firstClick)
+            {
+                StopTimer();
+                ReInitializeParamThenRestart();
+            }
         }
     }
 }

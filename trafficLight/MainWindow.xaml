@@ -28,12 +28,7 @@
             <Button x:Name="btnCompany"  Content="伴随模式" HorizontalAlignment="Left" Height="29" Margin="192,106,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <Button x:Name="btnDisableTimer"  Content="DisableTimer" HorizontalAlignment="Left" Height="29" Margin="283,52,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnDisableTimer_Click"/>
             <Button x:Name="btnOpen"  Content="开始" HorizontalAlignment="Left" Height="29" Margin="192,52,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnOpen_Click"/>
-            <ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="192,158,0,0" VerticalAlignment="Top" Width="70"  SelectedIndex="0">
-                <ComboBoxItem Content="红" Name="red" Selected="LightSelected" />
-                <ComboBoxItem Content="黄" Name="yellow" Selected="LightSelected"/>
-                <ComboBoxItem Content="绿" Name="green" Selected="LightSelected"/>
-            </ComboBox>
-            <TextBox x:Name="redCount"  DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="14,202,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="51" TextAlignment="Center" FontSize="21.333" ToolTip="红灯倒计时时间设置"/>
+            <TextBox x:Name="redCount"   DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="14,202,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="51" TextAlignment="Center" FontSize="21.333" ToolTip="红灯倒计时时间设置"/>
             <TextBlock x:Name="redIdentificastion"  HorizontalAlignment="Left" Height="25" Margin="19,237,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" Text="红" FontSize="20" TextAlignment="Center"/>
             <TextBox x:Name="greenCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="116,202,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="51" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
             <TextBlock x:Name="greenIdentificastion1" HorizontalAlignment="Left" Height="25" Margin="121,237,0,0" TextWrapping="Wrap" Text="绿" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
@@ -44,6 +39,11 @@
             <Button x:Name="btnEnableTimer"  Content="EnableTimer" HorizontalAlignment="Left" Height="29" Margin="283,18,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnEnableTimer_Click"/>
             <TextBox x:Name="lightChangeClorTbx" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="172,202,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="51" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
             <TextBlock x:Name="lightChangeClorTbk" HorizontalAlignment="Left" Height="25" Margin="177,237,0,0" TextWrapping="Wrap" Text="闪烁" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
+            <ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="192,158,0,0" VerticalAlignment="Top" Width="70"  SelectedIndex="0">
+                <ComboBoxItem Content="红" Name="red"  Selected="LightSelected"/>
+                <ComboBoxItem Content="黄" Name="yellow"  Selected="LightSelected"/>
+                <ComboBoxItem Content="绿" Name="green"   Selected="LightSelected"/>
+            </ComboBox>
 
         </Grid>
         <!--<ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="593,133,0,0" VerticalAlignment="Top" Width="78"  SelectedIndex="0">

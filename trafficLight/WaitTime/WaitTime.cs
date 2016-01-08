@@ -300,11 +300,6 @@ namespace trafficLight
 
         }
 
-
-
-
-
-
         /// <summary>
         /// ①灯序：红灰灰；②红灯倒计时；③倒数5s开始闪烁
         /// </summary>
