@@ -171,9 +171,10 @@ namespace trafficLight
             //RunTrafficLight();
             InitializePerLightRunTime();
             WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
-            mainCycleTimer.Start();
+            //mainCycleTimer.Start();
 
-            unitCycleTimer.Start();
+            //unitCycleTimer.Start();
+            ProceedTimer();
         }
         /// <summary>
         /// 停止计时器 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会发生
@@ -188,6 +189,11 @@ namespace trafficLight
             //halfSecondCycleTimer.Stop();
             //totalCycleTimer.Stop();
 
+        }
+        private void ProceedTimer()
+        {
+            unitCycleTimer.IsEnabled = !false;
+            mainCycleTimer.IsEnabled = !false;
         }
                 
 
@@ -242,7 +248,11 @@ namespace trafficLight
             }
 
         }
-
+        /// <summary>
+        /// 判断输入的Text是否在在5-120之间（简单的判断，待加入限制：输入必须为数字且不小于5并不大于120）
+        /// </summary>
+        /// <param name="inputText"></param>
+        /// <returns></returns>
         private bool IsInputTextSuitable(string inputText)
         {
             bool isSuitable = false;
@@ -253,15 +263,21 @@ namespace trafficLight
             return isSuitable;
         }
 
-        private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
+        private void setPerLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (IsTextChanged(tempTextGreenAfter,tempTextRedBefore))
+            StopTimer();
+            if (IsTextChanged(tempTextRedBefore, tempTextGreenAfter))
             {
                 RestartTimer();
+            }
+            else
+            {
+                ProceedTimer();
             }
 
             setLightTimeBtn.Foreground = new SolidColorBrush(WaitTime.Red);
         }
+
 
         private void redCount_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
@@ -270,19 +286,37 @@ namespace trafficLight
                 tempTextRedBefore = redCount.Text;
             //}
         }
+        /// <summary>
+        /// 在获得更改后tB.Text之后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void redCount_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
+            //StopTimer();
             tempTextRedAfter = redCount.Text;
+            //if (!IsTextChanged(tempTextRedBefore, tempTextRedAfter))
+            //{
+            //    ProceedTimer();
+            //}
         }
 
 
         private bool IsTextChanged(string textBefore,string textAfter)
         {
             bool isChanged = false;
-            if (textBefore != textAfter)
+            if (IsInputTextSuitable(textAfter))
             {
-                isChanged = !false;
+                if (textBefore != textAfter)
+                {
+                    isChanged = !false;
+                }
             }
+            else
+            {
+                MessageBox.Show("报警：110！");
+            }
+            
             return isChanged;
         }
 
@@ -292,5 +326,4 @@ namespace trafficLight
             ReInitializeParamThenRestart();
         }
     }
-
 }
