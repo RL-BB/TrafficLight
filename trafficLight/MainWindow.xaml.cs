@@ -180,7 +180,7 @@ namespace trafficLight
         /// 停止计时器 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会发生
         /// </summary>
         private void StopTimer()
-        {
+                   {
             //***比较Timer.IsEnable=False和Timer.stop()***
 
             //unitCycleTimer.Dispatcher.Thread.Abort();
@@ -266,9 +266,12 @@ namespace trafficLight
         private void setPerLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
             StopTimer();
-            if (IsTextChanged(tempTextRedBefore, tempTextGreenAfter))
+            if (IsTextChanged(tempTextRedBefore, tempTextRedAfter))
             {
-                RestartTimer();
+                //没必要使用→→RestartTimer()来RestartTimer，使用ReInitializeParamThenRestart()就够了
+                //因为StopTimer()在在按钮进入按钮事件之后就使用了；
+                ReInitializeParamThenRestart();
+                //RestartTimer();
             }
             else
             {
@@ -315,7 +318,7 @@ namespace trafficLight
             else
             {
                 MessageBox.Show("报警：110！");
-            }
+                                                                                                                                }
             
             return isChanged;
         }
