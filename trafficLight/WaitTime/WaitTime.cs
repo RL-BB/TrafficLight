@@ -87,7 +87,7 @@ namespace trafficLight
         #endregion
 
         /// <summary>
-        /// 初始化 计时器num
+        /// 初始化 计时器num（mainCycleTimer_Tick里使用的方法）
         /// </summary>
         public static void SetNumForCycleCount(int rTime, int yTime, int gTime)
         {

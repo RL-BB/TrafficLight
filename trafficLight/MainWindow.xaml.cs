@@ -71,22 +71,23 @@ namespace trafficLight
         {
 
             InitializeComponent();
-
+            //setLightTimeBtn.Click += setPerLightTimeBtn_Click;
             //mainTimerTb.Text = "110";
-            //halfSencondTimerTb.Text = "114";
+            //halfSencondTimerTb.Text = "114"; 
             //mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
             //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
             //mainTimerTb.ToolTip = mainTimerTb.Text.ToString();
             //halfSencondTimerTb.ToolTip = halfSencondTimerTb.Text.ToString();
             ////LightWaitTime();
-            //mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
-            //unitCycleTimer.Tick += unitCycleTimer_Tick;
+            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            unitCycleTimer.Tick += unitCycleTimer_Tick;
 
         }
 
+
         void RunTrafficLight()
         {
-            InitializePerLightRunTime();
+            InitializePerLightRunTime();//***初始化Interval；如果没有此行Interval=0；***
             mainCycleTimer.Start();
             //红灯30s+黄灯5s+绿灯15s=50，参数里直接写数字不合适，应该用有内涵的param代替
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
@@ -96,8 +97,8 @@ namespace trafficLight
             unitCycleTimer.Start();
             unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
 
-            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
-            unitCycleTimer.Tick += unitCycleTimer_Tick;
+            //mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            //unitCycleTimer.Tick += unitCycleTimer_Tick;
         }
 
 
@@ -122,7 +123,18 @@ namespace trafficLight
             //mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
             //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
             unitTimerCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);
-            halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
+            //if (mainTimerCount >= 2)
+            //{
+            //    MessageBox.Show("报警：110");
+            //    System.Threading.Thread.Sleep(5000);
+            //    unitTimerCount = 0;
+            //}
+            //else
+            //{
+                halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
+                //mainTimerTb.Text = "mainTimerCount次数：" + (++mainTimerCount) + "；";
+            //}
+            //halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
         }
 
         /// <summary>
@@ -210,8 +222,10 @@ namespace trafficLight
         /// </summary>
         private void ProceedTimer()
         {
-            unitCycleTimer.IsEnabled = !false;
-            mainCycleTimer.IsEnabled = !false;
+            mainCycleTimer.Start();
+            unitCycleTimer.Start();
+            //unitCycleTimer.IsEnabled = !false;
+            //mainCycleTimer.IsEnabled = !false;
         }
 
         /// <summary>
@@ -229,8 +243,9 @@ namespace trafficLight
 
         private void btnDisableTimer_Click(object sender, RoutedEventArgs e)
         {
-            unitCycleTimer.Stop();
-            mainCycleTimer.Stop();
+            StopTimer();
+            //unitCycleTimer.Stop();
+            //mainCycleTimer.Stop();
             ////halfSecondCycleTimer.IsEnabled = false;
             ////totalCycleTimer.IsEnabled = false;
             //mainTimerTb.Text = "主T：" + (mainCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
@@ -249,6 +264,11 @@ namespace trafficLight
             //halfSencondTimerTb.Text = "副T：" + (unitCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
 
             ReInitializeParamThenRestart();
+            unitTimerCount = 0;
+            //mainTimerCount = 0;
+            
+
+
         }
 
         /// <summary>
@@ -300,23 +320,7 @@ namespace trafficLight
 
         private void setPerLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
-            StopTimer();
-            bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
-            bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
-            bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
-            if (redCountChanged || yellowCountChangded || greenCountChanged)
-            {
-                //没必要使用→→RestartTimer()来RestartTimer，使用ReInitializeParamThenRestart()就够了
-                //因为StopTimer()在在按钮进入按钮事件之后就使用了；
-                ReInitializeParamThenRestart();
-                //RestartTimer();
-            }
-            else
-            {
-                ProceedTimer();
-            }
-
-            setLightTimeBtn.Foreground = new SolidColorBrush(WaitTime.Red);
+           
         }
 
         /// <summary>
@@ -391,6 +395,26 @@ namespace trafficLight
         {
             StopTimer();
             ReInitializeParamThenRestart();
+        }
+
+        private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            StopTimer();
+            bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
+            bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
+            bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
+            if (redCountChanged || yellowCountChangded || greenCountChanged)
+            {
+                //没必要使用→→RestartTimer()来RestartTimer，使用ReInitializeParamThenRestart()就够了
+                //因为StopTimer()在在按钮进入按钮事件之后就使用了；
+                ReInitializeParamThenRestart();
+                //RestartTimer();
+            }
+            else
+            {
+                ProceedTimer();
+            }
+            setLightTimeBtn.Foreground = new SolidColorBrush(WaitTime.Green);
         }
     }
 }

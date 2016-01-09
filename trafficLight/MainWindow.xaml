@@ -44,8 +44,8 @@
                 <ComboBoxItem Content="黄" Name="yellow"  Selected="LightSelected"/>
                 <ComboBoxItem Content="绿" Name="green"   Selected="LightSelected"/>
             </ComboBox>
-            <Button x:Name="setLightTimeBtn" Content="设置" HorizontalAlignment="Left" Height="29" Margin="237,207,0,0" VerticalAlignment="Top" Width="70" Click="setPerLightTimeBtn_Click"/>
-
+            <Button x:Name="setLightTimeBtn" Content="设置" HorizontalAlignment="Left" Height="29" Margin="237,207,0,0" VerticalAlignment="Top" Width="70" Click="setLightTimeBtn_Click" />
+            <!--Click="setPerLightTimeBtn_Click"-->
         </Grid>
         <!--<ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="593,133,0,0" VerticalAlignment="Top" Width="78"  SelectedIndex="0">
             <ComboBoxItem Content="红" Name="red" Selected="LightSelected" />
