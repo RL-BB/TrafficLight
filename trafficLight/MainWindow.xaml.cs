@@ -29,6 +29,7 @@ namespace trafficLight
         public DispatcherTimer mainCycleTimer = new DispatcherTimer();
         public DispatcherTimer unitCycleTimer = new DispatcherTimer();
 
+        #region Here have params:红绿灯的倒计时时间
         /// <summary>
         /// 红灯倒计时时间输入值，默认为30
         /// </summary>
@@ -41,19 +42,30 @@ namespace trafficLight
         /// 绿灯倒计时时间输入值，默认为15s
         /// </summary>
         public static int gLNumTbx;
+        #endregion
 
         //窗口初始化时 bool变量默认值为false
         private bool firstClick = !false;
+
+        #region Here have params: 用来判断红绿灯的倒计时时间是否改变 
         private string tempTextRedBefore;
         private string tempTextYellowBefore;
         private string tempTextGreenBefore;
-
         private string tempTextRedAfter;
         private string tempTextYellowAfter;
         private string tempTextGreenAfter;
+        #endregion
 
+        #region Here have params: 计时器Tick事件运行的次数
+        /// <summary>
+        /// mainTimer.Tick运行的次数
+        /// </summary>
         protected int mainTimerCount;
+        /// <summary>
+        /// unitTimer.Tick事件运行的次数
+        /// </summary>
         protected int unitTimerCount;
+        #endregion
 
         public MainWindow()
         {
@@ -64,11 +76,12 @@ namespace trafficLight
             //halfSencondTimerTb.Text = "114";
             //mainTimerTb.Text = "主T：" + (totalCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
             //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.IsEnabled == false ? "Closed" : "Open").ToString();
-            mainTimerTb.ToolTip = mainTimerTb.Text.ToString();
-            halfSencondTimerTb.ToolTip = halfSencondTimerTb.Text.ToString();
-            //LightWaitTime();
-            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
-            unitCycleTimer.Tick += unitCycleTimer_Tick;
+            //mainTimerTb.ToolTip = mainTimerTb.Text.ToString();
+            //halfSencondTimerTb.ToolTip = halfSencondTimerTb.Text.ToString();
+            ////LightWaitTime();
+            //mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            //unitCycleTimer.Tick += unitCycleTimer_Tick;
+
         }
 
         void RunTrafficLight()
@@ -82,6 +95,9 @@ namespace trafficLight
 
             unitCycleTimer.Start();
             unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
+
+            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            unitCycleTimer.Tick += unitCycleTimer_Tick;
         }
 
 
@@ -96,7 +112,7 @@ namespace trafficLight
             WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
             //WaitTime.SetNumForCycleCount(30, 5, 15);
             //mainTimerCount++;
-            System.Threading.Thread.Sleep(3000);//睡3s
+            //System.Threading.Thread.Sleep(3000);//for Test
 
             mainTimerTb.Text = "mainTick次数：" + (++mainTimerCount).ToString() + "；" + "mainInterval：" + WaitTime.trafficLightsTime;
 
@@ -105,11 +121,30 @@ namespace trafficLight
         {
             //mainTimerTb.Text = "主T：" + (totalCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
             //halfSencondTimerTb.Text = "副T：" + (halfSecondCycleTimer.Dispatcher.HasShutdownStarted == false ? "Closed" : "Open").ToString();
-            halfSecondCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);
+            unitTimerCycle(chooseLight.SelectedIndex, WaitTime.textFontColor, WaitTime.rLColor, WaitTime.yLColor, WaitTime.gLColor);
             halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
         }
 
-
+        /// <summary>
+        /// 微循环（0.5s）的动作
+        /// </summary>
+        /// <param name="selectLightIndex"></param>
+        /// <param name="textFontColor"></param>
+        /// <param name="rLColor"></param>
+        /// <param name="yLColor"></param>
+        /// <param name="gLColor"></param>
+        private void unitTimerCycle(int selectLightIndex, Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
+        {
+            //TextBlock中倒计时显示内容，参数1为临时添加 无意义
+            tBk0.Text = WaitTime.InitialParam(selectLightIndex);
+            tBkCount.Text = (WaitTime.trafficLightsTime2 + 1).ToString();
+            //倒计时时文本的颜色
+            tBk0.Foreground = new SolidColorBrush(textFontColor);
+            //倒计时时灯的颜色
+            redLight.Fill = new SolidColorBrush(rLColor);
+            yellowLight.Fill = new SolidColorBrush(yLColor);
+            greenLight.Fill = new SolidColorBrush(gLColor);
+        }
 
         /// <summary>
         /// 初始化交通灯各倒计时时间
@@ -142,27 +177,6 @@ namespace trafficLight
                 MessageBox.Show(mainWindow, "请勿多次单击\"'开始'\"按键");
             }
         }
-        /// <summary>
-        /// 微循环（0.5s）的动作
-        /// </summary>
-        /// <param name="selectLightIndex"></param>
-        /// <param name="textFontColor"></param>
-        /// <param name="rLColor"></param>
-        /// <param name="yLColor"></param>
-        /// <param name="gLColor"></param>
-        private void halfSecondCycle(int selectLightIndex, Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
-        {
-            //TextBlock中倒计时显示内容，参数1为临时添加 无意义
-            tBk0.Text = WaitTime.InitialParam(selectLightIndex);
-            tBkCount.Text = (WaitTime.trafficLightsTime2 + 1).ToString();
-            //倒计时时文本的颜色
-            tBk0.Foreground = new SolidColorBrush(textFontColor);
-            //倒计时时灯的颜色
-            redLight.Fill = new SolidColorBrush(rLColor);
-            yellowLight.Fill = new SolidColorBrush(yLColor);
-            greenLight.Fill = new SolidColorBrush(gLColor);
-        }
-
 
         /// <summary>
         /// 重启两个计时器（注意Timer.Start()的顺序，并确认之前的计时器已经关闭）
@@ -191,12 +205,14 @@ namespace trafficLight
             //totalCycleTimer.Stop();
 
         }
+        /// <summary>
+        /// 重启Timer，具体操作为给Timer.IsEnabled赋值为ture
+        /// </summary>
         private void ProceedTimer()
         {
             unitCycleTimer.IsEnabled = !false;
             mainCycleTimer.IsEnabled = !false;
         }
-
 
         /// <summary>
         /// ComboBox中选择某种颜色的灯的时候开始
@@ -209,7 +225,6 @@ namespace trafficLight
             {
                 RestartTimer();
             }
-
         }
 
         private void btnDisableTimer_Click(object sender, RoutedEventArgs e)
@@ -224,7 +239,6 @@ namespace trafficLight
             //unitCycleTimer.Stop();
             //mainCycleTimer.Stop();
         }
-
         private void btnEnableTimer_Click(object sender, RoutedEventArgs e)
         {
             //InitialPerLightRunTime();
@@ -237,6 +251,11 @@ namespace trafficLight
             ReInitializeParamThenRestart();
         }
 
+        /// <summary>
+        /// 获得数字：把字符串转换为数字，不可转化为数字时返回0
+        /// </summary>
+        /// <param name="tbText"></param>
+        /// <returns></returns>
         private int FetchNum(string tbText)
         {
             //待加入判断，输入的tbText没法转成数字咋办？用try()Catch{}处理？
@@ -349,7 +368,6 @@ namespace trafficLight
                     break;
             }
         }
-
 
         private bool IsTextChanged(string textBefore, string textAfter)
         {
