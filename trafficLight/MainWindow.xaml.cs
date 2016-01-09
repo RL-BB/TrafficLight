@@ -45,8 +45,8 @@ namespace trafficLight
         //窗口初始化时 bool变量默认值为false
         private bool firstClick = !false;
         private string tempTextRedBefore;
-        private string tempTextYellow;
-        private string tempTextGreen;
+        private string tempTextYellowBefore;
+        private string tempTextGreenBefore;
 
         private string tempTextRedAfter;
         private string tempTextYellowAfter;
@@ -67,21 +67,20 @@ namespace trafficLight
             mainTimerTb.ToolTip = mainTimerTb.Text.ToString();
             halfSencondTimerTb.ToolTip = halfSencondTimerTb.Text.ToString();
             //LightWaitTime();
-
+            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            unitCycleTimer.Tick += unitCycleTimer_Tick;
         }
 
         void RunTrafficLight()
         {
             InitializePerLightRunTime();
             mainCycleTimer.Start();
-            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
             //红灯30s+黄灯5s+绿灯15s=50，参数里直接写数字不合适，应该用有内涵的param代替
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
             mainCycleTimer.Interval = TimeSpan.FromMilliseconds((rLNumTbx + yLNumTbx + gLNumTbx) * 1000 + 1000);
 
 
             unitCycleTimer.Start();
-            unitCycleTimer.Tick += unitCycleTimer_Tick;
             unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
         }
 
@@ -97,6 +96,8 @@ namespace trafficLight
             WaitTime.SetNumForCycleCount(rLNumTbx, yLNumTbx, gLNumTbx);
             //WaitTime.SetNumForCycleCount(30, 5, 15);
             //mainTimerCount++;
+            System.Threading.Thread.Sleep(3000);//睡3s
+
             mainTimerTb.Text = "mainTick次数：" + (++mainTimerCount).ToString() + "；" + "mainInterval：" + WaitTime.trafficLightsTime;
 
         }
@@ -204,10 +205,10 @@ namespace trafficLight
         /// <param name="e"></param>
         private void LightSelected(object sender, RoutedEventArgs e)
         {
-            //if (firstClick)
-            //{
-            RestartTimer();
-            //}
+            if (!firstClick)
+            {
+                RestartTimer();
+            }
 
         }
 
@@ -238,6 +239,7 @@ namespace trafficLight
 
         private int FetchNum(string tbText)
         {
+            //待加入判断，输入的tbText没法转成数字咋办？用try()Catch{}处理？
             if (tbText == null)
             {
                 return 0;
@@ -253,10 +255,24 @@ namespace trafficLight
         /// </summary>
         /// <param name="inputText"></param>
         /// <returns></returns>
-        private bool IsInputTextSuitable(string inputText)
+        private bool IsInputTextSuitable(string textBefore, string textAfter)
         {
             bool isSuitable = false;
-            if ((FetchNum(inputText) >= 5) && (FetchNum(inputText) <= 120))
+            int tempTextBefore = FetchNum(textBefore);
+            int tempTextAfter = FetchNum(textAfter);
+            //if (tempTextBefore == tempTextAfter)//点击按钮设置后，数字没有改变
+            //{
+            //    MessageBox.Show("报警：110。没有修改 搞毛啊");
+            //    return isSuitable;
+            //}
+            //else if ((tempTextAfter >= 5) && (tempTextAfter <= 120))
+            //{
+            //    isSuitable = !false;
+            //    return isSuitable;
+            //}
+            //else
+            //    return isSuitable;
+            if ((tempTextAfter >= 5) && (tempTextAfter <= 120))
             {
                 isSuitable = !false;
             }
@@ -266,7 +282,10 @@ namespace trafficLight
         private void setPerLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
             StopTimer();
-            if (IsTextChanged(tempTextRedBefore, tempTextRedAfter))
+            bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
+            bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
+            bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
+            if (redCountChanged || yellowCountChangded || greenCountChanged)
             {
                 //没必要使用→→RestartTimer()来RestartTimer，使用ReInitializeParamThenRestart()就够了
                 //因为StopTimer()在在按钮进入按钮事件之后就使用了；
@@ -281,34 +300,62 @@ namespace trafficLight
             setLightTimeBtn.Foreground = new SolidColorBrush(WaitTime.Red);
         }
 
-
-        private void redCount_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        /// <summary>
+        /// Occurs when the keyboard is focused on this element
+        /// </summary>
+        /// <param name="sender">element here means TextBox</param>
+        /// <param name="e"></param>
+        private void LightCount_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            //if (!firstClick)
-            //{
-            tempTextRedBefore = redCount.Text;
-            //}
+            string typeName = sender.GetType().Name;
+            TextBox lightText = sender as TextBox;
+
+            switch (typeName)
+            {
+                case "redCount":
+                    tempTextRedBefore = lightText.Text;
+                    break;
+                case "yellowCount":
+                    tempTextYellowBefore = lightText.Text;
+                    break;
+                case "greenCount":
+                    tempTextGreenBefore = lightText.Text;
+                    break;
+                default:
+                    break;
+            }
         }
         /// <summary>
-        /// 在获得更改后tB.Text之后
+        /// Occurs when the keyboard is no longer focused on this element
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void redCount_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        /// <param name="sender">element here means TextBox</param>
+        /// <param name="e">？？？？</param>
+        private void LightCount_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            //StopTimer();
-            tempTextRedAfter = redCount.Text;
-            //if (!IsTextChanged(tempTextRedBefore, tempTextRedAfter))
-            //{
-            //    ProceedTimer();
-            //}
+            string typeName = sender.GetType().Name;
+            TextBox lightText = sender as TextBox;
+            switch (typeName)
+            {
+                case "redCount":
+                    tempTextRedAfter = lightText.Text;
+                    break;
+                case "yellowCount":
+                    tempTextYellowAfter = lightText.Text;
+                    break;
+                case "greenCount":
+                    tempTextGreenAfter = lightText.Text;
+                    break;
+                default:
+                    break;
+            }
         }
 
 
         private bool IsTextChanged(string textBefore, string textAfter)
         {
+            //得加入记录 三个lightTet是否改动的记录
             bool isChanged = false;
-            if (IsInputTextSuitable(textAfter))
+            if (IsInputTextSuitable(textBefore,textAfter))
             {
                 if (textBefore != textAfter)
                 {
