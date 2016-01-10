@@ -222,10 +222,10 @@ namespace trafficLight
         /// </summary>
         private void ProceedTimer()
         {
-            mainCycleTimer.Start();
-            unitCycleTimer.Start();
-            //unitCycleTimer.IsEnabled = !false;
-            //mainCycleTimer.IsEnabled = !false;
+            //mainCycleTimer.Start();
+            //unitCycleTimer.Start();
+            unitCycleTimer.IsEnabled = !false;
+            mainCycleTimer.IsEnabled = !false;
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace trafficLight
             //halfSencondTimerTb.Text = "副T：" + (unitCycleTimer.IsEnabled == false ? "Dis" : "En").ToString();
 
             ReInitializeParamThenRestart();
-            unitTimerCount = 0;
+            //unitTimerCount = 0;
             //mainTimerCount = 0;
             
 
@@ -316,11 +316,6 @@ namespace trafficLight
                 isSuitable = !false;
             }
             return isSuitable;
-        }
-
-        private void setPerLightTimeBtn_Click(object sender, RoutedEventArgs e)
-        {
-           
         }
 
         /// <summary>
