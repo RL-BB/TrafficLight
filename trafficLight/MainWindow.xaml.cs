@@ -84,7 +84,6 @@ namespace trafficLight
 
         }
 
-
         void RunTrafficLight()
         {
             InitializePerLightRunTime();//***初始化Interval；如果没有此行Interval=0；***
@@ -100,7 +99,6 @@ namespace trafficLight
             //mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
             //unitCycleTimer.Tick += unitCycleTimer_Tick;
         }
-
 
 
         /// <summary>
