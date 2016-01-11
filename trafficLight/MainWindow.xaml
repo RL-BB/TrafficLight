@@ -22,8 +22,8 @@
                     <ImageBrush/>
                 </Ellipse.Stroke>
             </Ellipse>
-            <TextBlock x:Name="tBk0"  HorizontalAlignment="Left" Margin="14,46,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="80" FontWeight="Bold" FontStretch="Expanded" IsEnabled="False" Foreground="Red" Text="000" TextAlignment="Center" LineHeight="18.667" Width="153"/>
-            <TextBlock x:Name="tBkCount" HorizontalAlignment="Left" Margin="19,12,0,0" TextWrapping="Wrap" Text="888"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="32" FontWeight="Bold" Visibility="Visible" Height="54" Width="148" TextAlignment="Center"/>
+            <TextBlock x:Name="countdownCurrenLightupTbk"  HorizontalAlignment="Left" Margin="14,46,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="80" FontWeight="Bold" FontStretch="Expanded" IsEnabled="False" Foreground="Red" Text="000" TextAlignment="Center" LineHeight="18.667" Width="153"/>
+            <TextBlock x:Name="countdownLightsTbk" HorizontalAlignment="Left" Margin="19,12,0,0" TextWrapping="Wrap" Text="888"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="32" FontWeight="Bold" Visibility="Visible" Height="54" Width="148" TextAlignment="Center"/>
 
             <Button x:Name="btnCompany"  Content="伴随模式" HorizontalAlignment="Left" Height="29" Margin="237,87,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="#FFA9A1AE" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <Button x:Name="btnDisableTimer"  Content="DisableTimer" HorizontalAlignment="Left" Height="29" Margin="360,46,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnDisableTimer_Click"/>
@@ -37,14 +37,15 @@
             <TextBlock x:Name="mainTimerTb" HorizontalAlignment="Left" Margin="319,86,0,0" TextWrapping="Wrap" Text="主T：Closed"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="18.667" FontWeight="Bold" Visibility="Visible" Height="79" Width="187" TextAlignment="Center"/>
             <TextBlock x:Name="halfSencondTimerTb" HorizontalAlignment="Left" Margin="319,173,0,0" TextWrapping="Wrap" Text="副T：Closed"  VerticalAlignment="Top" RenderTransformOrigin="1.994,0.937" FontSize="18.667" FontWeight="Bold" Visibility="Visible" Height="29" Width="187" TextAlignment="Center"/>
             <Button x:Name="btnEnableTimer"  Content="EnableTimer" HorizontalAlignment="Left" Height="29" Margin="360,12,0,0" VerticalAlignment="Top" Width="122" RenderTransformOrigin="0.491,0.298" ClipToBounds="True" Background="Lime" IsDefault="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="btnEnableTimer_Click"/>
-            <TextBox x:Name="lightChangeClorTbx"  HorizontalAlignment="Left" Height="35" Margin="172,202,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="51" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
+            <TextBox x:Name="lightChangeClorTbx"  HorizontalAlignment="Left" Height="35" Margin="172,202,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="51" FontSize="21.333" TextAlignment="Center"/>
             <TextBlock x:Name="lightChangeClorTbk" HorizontalAlignment="Left" Height="25" Margin="177,237,0,0" TextWrapping="Wrap" Text="闪烁" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
-            <ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="29" Margin="237,147,0,0" VerticalAlignment="Top" Width="70"  SelectedIndex="0">
-                <ComboBoxItem Content="红" Name="red"  Selected="LightSelected"/>
-                <ComboBoxItem Content="黄" Name="yellow"  Selected="LightSelected"/>
-                <ComboBoxItem Content="绿" Name="green"   Selected="LightSelected"/>
+            <ComboBox x:Name="chooseLightColor" HorizontalAlignment="Left" Height="29" Margin="237,147,0,0" VerticalAlignment="Top" Width="70"  SelectedIndex="0" SelectionChanged="chooseLightColor_SelectionChanged"  >
+                <ComboBoxItem Content="红" Name="red" />
+                <ComboBoxItem Content="黄" Name="yellow" />
+                <ComboBoxItem Content="绿" Name="green" />
+                <!--MouseLeftButtonDown="chooseLightColor_MouseLeftButtonDown"-->
             </ComboBox>
-            <Button x:Name="setLightTimeBtn" Content="设置" HorizontalAlignment="Left" Height="29" Margin="237,207,0,0" VerticalAlignment="Top" Width="70" Click="setLightTimeBtn_Click" />
+            <Button x:Name="setLightTimeBtn" Content="设置" HorizontalAlignment="Left" Height="29" Margin="237,207,0,0" VerticalAlignment="Top" Width="70" Click="setLightTimeBtn_Click" ToolTip="NoChanges则继续，HaveChangd则重新计时" />
             <!--Click="setPerLightTimeBtn_Click"-->
         </Grid>
         <!--<ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="593,133,0,0" VerticalAlignment="Top" Width="78"  SelectedIndex="0">
