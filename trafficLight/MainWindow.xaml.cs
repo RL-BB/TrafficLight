@@ -297,9 +297,7 @@ namespace trafficLight
         /// <returns></returns>
         private bool IsInputTextSuitable(string textBefore, string textAfter)
         {
-            bool isSuitable = false;
-            int tempTextBefore = FetchNum(textBefore);
-            int tempTextAfter = FetchNum(textAfter);
+
             //if (tempTextBefore == tempTextAfter)//点击按钮设置后，数字没有改变
             //{
             //    MessageBox.Show("报警：110。没有修改 搞毛啊");
@@ -312,6 +310,11 @@ namespace trafficLight
             //}
             //else
             //    return isSuitable;
+
+            bool isSuitable = false;
+            int tempTextBefore = FetchNum(textBefore);
+            int tempTextAfter = FetchNum(textAfter);
+            //当且仅当修改后的tempText能转换为5到120的数字时
             if ((tempTextAfter >= 5) && (tempTextAfter <= 120))
             {
                 isSuitable = !false;
@@ -326,8 +329,9 @@ namespace trafficLight
         /// <param name="e"></param>
         private void LightCount_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            string typeName = sender.GetType().Name;
+            //string typeName = sender.GetType().Name;
             TextBox lightText = sender as TextBox;
+            string typeName = lightText.Name;
 
             switch (typeName)
             {
@@ -372,19 +376,19 @@ namespace trafficLight
         private bool IsTextChanged(string textBefore, string textAfter)
         {
             //得加入记录 三个lightTet是否改动的记录
-            bool isChanged = false;
+            bool isTextChanged = false;
             if (IsInputTextSuitable(textBefore, textAfter))
             {
                 if (textBefore != textAfter)
                 {
-                    isChanged = !false;
+                    isTextChanged = !false;
                 }
             }
             //else
             //{
             //    MessageBox.Show("报警：110！");
             //}
-            return isChanged;
+            return isTextChanged;
         }
 
         private void RestartTimer()
@@ -400,12 +404,13 @@ namespace trafficLight
         /// <param name="e"></param>
         private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
-            StopTimer();
             bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
             bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
             bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
             if (redCountChanged || yellowCountChangded || greenCountChanged)
             {
+                StopTimer();
+
                 //没必要使用→→RestartTimer()来RestartTimer，使用ReInitializeParamThenRestart()就够了
                 //因为StopTimer()在在按钮进入按钮事件之后就使用了；
                 ReInitializeParamThenRestart();
@@ -496,20 +501,18 @@ namespace trafficLight
         {
             #region 三种灯的亮灭
             if (TrafficLightsTime.rLColor == TrafficLightsTime.Red)
-                TrafficLightsTime.lightUp = "红灯";
+                TrafficLightsTime.oneLightUp = "红灯";
             if (TrafficLightsTime.yLColor == TrafficLightsTime.Yellow)
-                TrafficLightsTime.lightUp = "黄灯";
+                TrafficLightsTime.oneLightUp = "黄灯";
             if (TrafficLightsTime.gLColor == TrafficLightsTime.Green)
-                TrafficLightsTime.lightUp = "绿灯";
+                TrafficLightsTime.oneLightUp = "绿灯";
             //灯的颜色只有红黄绿灰四种色，灯亮分别为红、黄、绿，灯灭为黑；
-            return TrafficLightsTime.lightUp;
+            return TrafficLightsTime.oneLightUp;
             //TrafficLightsTime.rLColor;//红灯的颜色状态（红or灰）
             //TrafficLightsTime.yLColor;//黄灯的颜色状态（黄or灰）
             //TrafficLightsTime.gLColor;//绿灯的颜色状态（绿or灰）
             #endregion
         }
-
-
 
         /// <summary>
         /// 通过获取当前灯的颜色来判断否是绿灯
@@ -520,7 +523,7 @@ namespace trafficLight
 
             bool isGreenlight = false;
             //if (LightUpColor() == "绿色")
-            if (TrafficLightsTime.lightUp == "绿色")//
+            if (TrafficLightsTime.oneLightUp == "绿色")//
             {
                 isGreenlight = !false;
             }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace trafficLight
 {
@@ -15,7 +8,8 @@ namespace trafficLight
     /// </summary>
     class TrafficLightsTime
     {
-        public static string lightUp ;
+        //当前在亮的那盏灯
+        public static string oneLightUp ;
 
         #region Here have params:定义四种颜色
         //四种颜色分别为：红、黄、绿、灰
