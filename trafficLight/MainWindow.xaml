@@ -48,17 +48,5 @@
             <Button x:Name="setLightTimeBtn" Content="设置" HorizontalAlignment="Left" Height="29" Margin="237,207,0,0" VerticalAlignment="Top" Width="70" Click="setLightTimeBtn_Click" ToolTip="NoChanges则继续，HaveChangd则重新计时" />
             <!--Click="setPerLightTimeBtn_Click"-->
         </Grid>
-        <!--<ComboBox x:Name="chooseLight" HorizontalAlignment="Left" Height="26" Margin="593,133,0,0" VerticalAlignment="Top" Width="78"  SelectedIndex="0">
-            <ComboBoxItem Content="红" Name="red" Selected="LightSelected" />
-            <ComboBoxItem Content="黄" Name="yellow" Selected="LightSelected"/>
-            <ComboBoxItem Content="绿" Name="green" Selected="LightSelected"/>
-        </ComboBox>
-        <TextBox x:Name="redCount"  DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="584,80,0,0" TextWrapping="Wrap" Text="30" VerticalAlignment="Top" Width="63" TextAlignment="Center" FontSize="21.333" ToolTip="红灯倒计时时间设置"/>
-        <TextBlock x:Name="redIdentificastion"  HorizontalAlignment="Left" Height="25" Margin="584,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" Text="红" FontSize="20" TextAlignment="Center"/>
-        <TextBox x:Name="greenCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="709,80,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="56" FontSize="21.333" TextAlignment="Center" ToolTip="绿灯倒计时时间设置"/>
-        <TextBlock x:Name="greenIdentificastion1" HorizontalAlignment="Left" Height="25" Margin="719,50,0,0" TextWrapping="Wrap" Text="绿" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>
-        <TextBox x:Name="yellowCount" DataContextChanged="LighCount_DataContextChanged" HorizontalAlignment="Left" Height="35" Margin="647,80,0,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="57" FontSize="21.333" TextAlignment="Center" ToolTip="黄灯倒计时时间设置"/>
-        <TextBlock x:Name="yellowIdentificastion" HorizontalAlignment="Left" Height="25" Margin="657,50,0,0" TextWrapping="Wrap" Text="黄" VerticalAlignment="Top" Width="46" FontSize="20" TextAlignment="Center"/>-->
-
     </Grid>
 </Window>

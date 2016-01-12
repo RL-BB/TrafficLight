@@ -20,12 +20,16 @@
   2.判断当前时间加上这段时间后，整个时间段过程中红绿灯变化的情况，并记录。
   3.判断如果这段时间全部为绿灯则返回通过，不全部是绿灯则返回不通过。
 
-
+  蔡强:
+  1.
   更改的内容
   01/10/2016 23：39
   1.备份好最新版本的Code后，使用Git Bash恢复至之前的版本，成功，命令：git reset --hard HEAD~
   2.把备份好的Code复制粘贴至Document文件夹，覆盖1中恢复到的版本；
   3.增加readme.txt文档，可以在GitHub中阅读到每次commit之后的内容，commit之前的注释复制一份写在readme.txt中，而且这个文本文档包含对软件的要求from小强；做起来，遇到问题再去解决，先把功能实现
 
+  01/12/2016
+  1.所做更改提到的first、second、third，ComboBoxItem.IsSelected==firstlight,ComboBox.SelectedIndex==0时，红为first，黄为second，绿为third； ComboBox.SelectedIndex==1时，黄为first，绿为second，红为third；ComboBox.SelectedIndex==2时，绿为first，红为second，黄为third；
+  
 
 </软件要求及改动追踪>
