@@ -66,12 +66,14 @@ namespace trafficLight
         void RunTrafficLight()
         {
             InitializePerLightRunTime(chooseLightColor.SelectedIndex);//***初始化Interval；如果没有此行，就获取不到每个交通灯对应的倒计时时间<==>Interval=0；***
-            mainCycleTimer.Start();
+            TrafficLightsTime.InitializeParamsInMainTimer();
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
-            mainCycleTimer.Interval = TimeSpan.FromMilliseconds((TrafficLightsTime.redLightCountdown + TrafficLightsTime.yellowLightCountdown + TrafficLightsTime.greenLightCountdown) * 1000 + 1000);
+            //mainCycleTimer.Interval = TimeSpan.FromMilliseconds((TrafficLightsTime.firstLightRuntime + TrafficLightsTime.secondLightRuntime + TrafficLightsTime.thirdLightRuntime) * 1000 + 1000);
+            mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
+            mainCycleTimer.Start();
 
-            unitCycleTimer.Start();
             unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
+            unitCycleTimer.Start();
         }
 
 
@@ -84,36 +86,37 @@ namespace trafficLight
         {
             InitializePerLightRunTime(chooseLightColor.SelectedIndex);//交通灯 三个灯的倒计时时间
             TrafficLightsTime.InitializeParamsInMainTimer();
+            TrafficLightsTime.TrafficLightsRuntime();//初始化MainTimer.Interval
             TrafficLightsTime.InitializeLightsUpSequenceColor(chooseLightColor.SelectedIndex);
             mainTimerTb.Text = "mainTick次数：" + (++mainTimerCount).ToString() + "；" + "mainInterval：" + TrafficLightsTime.trafficLightsTime;
 
         }
         /// <summary>
-        /// 初始化交通灯(红、黄、绿)各自的倒计时时间（要调用控件属性，无法移动到自定义类中）
+        /// 初始化交通灯(红、黄、绿)各自的倒计时时间（firstLightRuntime\secondLightRuntime\thirdLightRuntime）
         /// </summary>
         private void InitializePerLightRunTime(int selectedIndex)
         {
             switch (selectedIndex)
             {
                 case 0:
-                    TrafficLightsTime.firstLightRuntime = FetchNum(redCount.Text);
-                    TrafficLightsTime.secondLightRuntime = FetchNum(yellowCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = FetchNum(greenCount.Text);
+                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
+                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
+                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
                     break;
                 case 1:
-                    TrafficLightsTime.firstLightRuntime = FetchNum(yellowCount.Text);
-                    TrafficLightsTime.secondLightRuntime = FetchNum(greenCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = FetchNum(redCount.Text);
+                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
+                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
+                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
                     break;
                 case 2:
-                    TrafficLightsTime.firstLightRuntime = FetchNum(greenCount.Text);
-                    TrafficLightsTime.secondLightRuntime = FetchNum(redCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = FetchNum(yellowCount.Text);
+                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
+                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
+                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
                     break;
                 default:
-                    TrafficLightsTime.firstLightRuntime = FetchNum(redCount.Text);
-                    TrafficLightsTime.secondLightRuntime = FetchNum(yellowCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = FetchNum(greenCount.Text);
+                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
+                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
+                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
                     break;
             }
         }
@@ -137,7 +140,7 @@ namespace trafficLight
         /// <param name="rLColor"></param>
         /// <param name="yLColor"></param>
         /// <param name="gLColor"></param>
-        private void UnitTimerCycle( Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
+        private void UnitTimerCycle(Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
         {
             countdownCurrenLightupTbk.Text = TrafficLightsTime.countdownToUI.ToString();
             countdownLightsTbk.Text = (TrafficLightsTime.trafficLightsTime2 + 1).ToString();
@@ -189,31 +192,13 @@ namespace trafficLight
         /// </summary>
         private void ProceedTimer()
         {
-            //mainCycleTimer.Start();
-            //unitCycleTimer.Start();
+            mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
+            //unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
             mainCycleTimer.IsEnabled = !false;
             unitCycleTimer.IsEnabled = !false;
         }
 
-
-        /// <summary>
-        /// 获得数字：把字符串转换为数字，不可转化为数字时返回0
-        /// </summary>
-        /// <param name="tbText"></param>
-        /// <returns></returns>
-        private int FetchNum(string tbText)
-        {
-            //待加入判断，输入的tbText没法转成数字咋办？用try()Catch{}处理？
-            if (tbText == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return Convert.ToInt32(tbText);
-            }
-
-        }
+                
         /// <summary>
         /// 判断输入的Text是否在在5-120之间（简单的判断，待加入限制：输入必须为数字且不小于5并不大于120）数字5和120待用参数来代替
         /// </summary>
@@ -222,8 +207,8 @@ namespace trafficLight
         private bool IsInputTextSuitable(string textBefore, string textAfter)
         {
             bool isSuitable = false;
-            int tempTextBefore = FetchNum(textBefore);
-            int tempTextAfter = FetchNum(textAfter);
+            int tempTextBefore = TrafficLightsTime.FetchNum(textBefore);
+            int tempTextAfter = TrafficLightsTime.FetchNum(textAfter);
             //当且仅当修改后的tempText能转换为5到120的数字时
             if ((tempTextAfter >= 5) && (tempTextAfter <= 120))
             {
@@ -277,6 +262,11 @@ namespace trafficLight
         /// <param name="e"></param>
         private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
+            tempTextRedAfter = TrafficLightsTime.FetchNum(redCount.Text).ToString();
+            tempTextYellowAfter = TrafficLightsTime.FetchNum(yellowCount.Text).ToString();
+            tempTextGreenAfter = TrafficLightsTime.FetchNum(greenCount.Text).ToString();
+
+
             bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
             bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
             bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
@@ -291,8 +281,8 @@ namespace trafficLight
             }
             setLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
         }
-                
-        
+
+
 
         /// <summary>
         /// Occurs when the keyboard is focused on this element
@@ -327,25 +317,26 @@ namespace trafficLight
         /// <param name="e">？？？？</param>
         private void LightCount_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            string typeName = sender.GetType().Name;
-            TextBox lightText = sender as TextBox;
-            switch (typeName)
+            //string typeName = sender.GetType().Name;
+            TextBox setLightCountTbx = sender as TextBox;
+            string setLightCount = setLightCountTbx.Name;
+            switch (setLightCount)
             {
                 case "redCount":
-                    tempTextRedAfter = lightText.Text;
+                    tempTextRedAfter = setLightCountTbx.Text;
                     break;
                 case "yellowCount":
-                    tempTextYellowAfter = lightText.Text;
+                    tempTextYellowAfter = setLightCountTbx.Text;
                     break;
                 case "greenCount":
-                    tempTextGreenAfter = lightText.Text;
+                    tempTextGreenAfter = setLightCountTbx.Text;
                     break;
                 default:
                     break;
             }
-        }     
+        }
 
-        
+
 
         /// <summary>
         /// 根据ComboBox的SelectedIndex(序号)对应的ComboBoxItem.Content来判断当前灯的颜色,和倒计时文本的颜色
@@ -417,25 +408,6 @@ namespace trafficLight
             }
         }
 
-        /// <summary>
-        /// 得到当前是什么颜色的灯在亮，并能间接得到其他灯的颜色状态
-        /// </summary>
-        /// <returns>得到当前是什么颜色的灯在亮</returns>
-        public string LightUpColor()
-        {
-            #region 三种灯的亮灭
-            if (TrafficLightsTime.rLColor == TrafficLightsTime.Red)
-                TrafficLightsTime.oneLightUp = "红灯";
-            if (TrafficLightsTime.yLColor == TrafficLightsTime.Yellow)
-                TrafficLightsTime.oneLightUp = "黄灯";
-            if (TrafficLightsTime.gLColor == TrafficLightsTime.Green)
-                TrafficLightsTime.oneLightUp = "绿灯";
-            //灯的颜色只有红黄绿灰四种色，灯亮分别为红、黄、绿，灯灭为黑；
-            return TrafficLightsTime.oneLightUp;
-            #endregion
-        }
-               
-
         private void chooseLightColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             StopTimer();
@@ -451,15 +423,6 @@ namespace trafficLight
         }
 
 
-
-
-
-        private void InitializePerLightRunTime()
-        {
-            //TrafficLightsTime.redLightCountdown = FetchNum(redCount.Text);
-            //TrafficLightsTime.yellowLightCountdown = FetchNum(yellowCount.Text);
-            //TrafficLightsTime.greenLightCountdown = FetchNum(greenCount.Text);
-        }
         /// <summary>
         /// ComboBox中选择某种颜色的灯的时候开始
         /// </summary>

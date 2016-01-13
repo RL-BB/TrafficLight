@@ -8,7 +8,7 @@ A:\Documents\TrafficLight\trafficLight\obj\Debug\
 trafficLight
 none
 false
-DEBUG;TRACE
+CODE_ANALYSIS;DEBUG;TRACE
 A:\Documents\TrafficLight\trafficLight\App.xaml
 2-1509017259
 
@@ -16,5 +16,5 @@ A:\Documents\TrafficLight\trafficLight\App.xaml
 16-2044005032
 MainWindow.xaml;Simple Styles.xaml;
 
-True
+False
 

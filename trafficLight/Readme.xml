@@ -1,41 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <软件要求及改动追踪>
-  软件要求：
-  第一步：
-  1.交通红绿灯 红灯/绿灯/黄灯 三种灯切换，有数码显示各个灯的时间(以秒为单位)
-  问题：
-  2.三种灯亮的持续的时间可以改变和调整，红灯和绿灯时间范围为15秒到2分钟之间，黄灯的时间范围为1秒到15秒之间
-  3.人为干预功能，可以人为的将目前的灯改成任意颜色的灯。
+  <软件要求>
+    软件要求：
+    第一步：
+    1.交通红绿灯 红灯/绿灯/黄灯 三种灯切换，有数码显示各个灯的时间(以秒为单位)
+    问题：
+    2.三种灯亮的持续的时间可以改变和调整，红灯和绿灯时间范围为15秒到2分钟之间，黄灯的时间范围为1秒到15秒之间
+    3.人为干预功能，可以人为的将目前的灯改成任意颜色的灯。
 
-  第二步：
-  1.添加按钮，按钮点击后，记录该时间的三种灯的亮灭情况和三种灯秒数情况
-  1.随机生成一个秒数（范围在1秒到10分钟之间），判断当前时间加上此秒数后，三种灯的亮灭情况和三种灯的秒数情况
+    第二步：
+    1.添加按钮，按钮点击后，记录该时间的三种灯的亮灭情况和三种灯秒数情况
+    1.随机生成一个秒数（范围在1秒到10分钟之间），判断当前时间加上此秒数后，三种灯的亮灭情况和三种灯的秒数情况
 
-  2.添加函数，函数功能
-  (1).获得三种灯的亮灭情况和三种灯秒数情况
-  (2).如果是绿灯，返回通过。如果是红灯黄灯，返回不通过。
+    2.添加函数，函数功能
+    (1).获得三种灯的亮灭情况和三种灯秒数情况
+    (2).如果是绿灯，返回通过。如果是红灯黄灯，返回不通过。
 
-  第三步
-  1.随机生成一段时间（时间长度为在1秒到10分钟之间），做为输入参数。
-  2.判断当前时间加上这段时间后，整个时间段过程中红绿灯变化的情况，并记录。
-  3.判断如果这段时间全部为绿灯则返回通过，不全部是绿灯则返回不通过。
+    第三步
+    1.随机生成一段时间（时间长度为在1秒到10分钟之间），做为输入参数。
+    2.判断当前时间加上这段时间后，整个时间段过程中红绿灯变化的情况，并记录。
+    3.判断如果这段时间全部为绿灯则返回通过，不全部是绿灯则返回不通过。
+    
+    
+    01/12/2016
+    1.使用.NET 4环境，否则无法在XP上运行；
+    2.函数语句块不要太长；
+    3.不要泛滥的使用折叠；
+    4.尽量多的使用返回值，而不是直接调用；
+    5.实现第三步要求；
+  </软件要求>
+  <改动追踪>
+    更改的内容
+    01/10/2016 23：39
+    1.备份好最新版本的Code后，使用Git Bash恢复至之前的版本，成功，命令：git reset --hard HEAD~
+    2.把备份好的Code复制粘贴至Document文件夹，覆盖1中恢复到的版本；
+    3.增加readme.txt文档，可以在GitHub中阅读到每次commit之后的内容，commit之前的注释复制一份写在readme.txt中，而且这个文本文档包含对软件的要求from小强；做起来，遇到问题再去解决，先把功能实现
 
-  蔡强:
-  1.
-  更改的内容
-  01/10/2016 23：39
-  1.备份好最新版本的Code后，使用Git Bash恢复至之前的版本，成功，命令：git reset --hard HEAD~
-  2.把备份好的Code复制粘贴至Document文件夹，覆盖1中恢复到的版本；
-  3.增加readme.txt文档，可以在GitHub中阅读到每次commit之后的内容，commit之前的注释复制一份写在readme.txt中，而且这个文本文档包含对软件的要求from小强；做起来，遇到问题再去解决，先把功能实现
+    01/12/2016
+    1.所做更改提到的first、second、third，ComboBoxItem.IsSelected==firstlight,ComboBox.SelectedIndex==0时，红为first，黄为second，绿为third； ComboBox.SelectedIndex==1时，黄为first，绿为second，红为third；ComboBox.SelectedIndex==2时，绿为first，红为second，黄为third；
+    2.cd等价于countdown（倒计时，冷却时间）
 
-  01/12/2016
-  1.所做更改提到的first、second、third，ComboBoxItem.IsSelected==firstlight,ComboBox.SelectedIndex==0时，红为first，黄为second，绿为third； ComboBox.SelectedIndex==1时，黄为first，绿为second，红为third；ComboBox.SelectedIndex==2时，绿为first，红为second，黄为third；
-  2.cd等价于countdown（倒计时，冷却时间）
-
-  01/13/2016
-  1.把自定义的函数（方法？）用Pascal命名规则来进行更改
-  2.编写Code，一定要目的性要，有代表性的事情：定义一个函数的时候，形参是否使用，形参有什么意义，返回值类型是什么，函数的语句块要实现什么功能，列表出来，一一完成；
-  3.MainTimerTick要做的事：①InitializePerLightRuntime(ComboBox.SelectedIndex)-初始化每个灯的runtime；②InitializeParamsInMainTimer()根据①得到要用的数据；③InitializeLightsUpSequenceColor(ComboBox.SelectedIndex)亮起的顺序，可以合并到①中，但为了条例清晰，对功能、作用一目了然，分开写；
-  4.UnitTimerTick要做的事：①TrafficLightsTime.LightsUp(ComboBox.SelectedIndex)；②从自定义类TrafficLightsTime中调用主界面控件属性所需要的值；
-
+    01/13/2016
+    1.把自定义的函数（方法？）用Pascal命名规则来进行更改
+    2.编写Code，一定要目的性要，有代表性的事情：定义一个函数的时候，形参是否使用，形参有什么意义，返回值类型是什么，函数的语句块要实现什么功能，列表出来，一一完成；
+    3.MainTimerTick要做的事：①InitializePerLightRuntime(ComboBox.SelectedIndex)-初始化每个灯的runtime；②InitializeParamsInMainTimer()根据①得到要用的数据；③InitializeLightsUpSequenceColor(ComboBox.SelectedIndex)亮起的顺序，可以合并到①中，但为了条例清晰，对功能、作用一目了然，分开写；
+    4.UnitTimerTick要做的事：①TrafficLightsTime.LightsUp(ComboBox.SelectedIndex)；②从自定义类TrafficLightsTime中调用主界面控件属性所需要的值；
+    5.增加函数，执行的功能：以函数调用方式得到自定义类中的值；
+    6.设置红绿灯时间的按钮，Click事件：得到Click事件发生时，所要设置的红绿灯的时间，与GotKeyboardFocus事件发生时的红绿灯时间做对比从而得出bool IsChanged(before,after)的值，三个灯的时间有至少有一个有改变时，ReInitializeParamsThenRestart();
+    7.Timer.Start()之前要给Timer.Interval赋值，Tick事件所调用的函数一般不会改变，所以重启计时器时一般不需要再对Timer.Tick事件进行委托；
+  </改动追踪>
 </软件要求及改动追踪>
