@@ -58,8 +58,8 @@ namespace trafficLight
 
             InitializeComponent();
 
-            mainCycleTimer.Tick += mainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
-            unitCycleTimer.Tick += unitCycleTimer_Tick;
+            mainCycleTimer.Tick += MainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            unitCycleTimer.Tick += UnitCycleTimer_Tick;
 
         }
 
@@ -76,54 +76,21 @@ namespace trafficLight
 
 
         /// <summary>
-        /// 主计时器Tick事件
+        /// MainTimer.Tick事件调用的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void mainCycleTimer_Tick(object sender, EventArgs e)
+        private void MainCycleTimer_Tick(object sender, EventArgs e)
         {
-
-            TrafficLightsTime.mainTimerInitializeParams();
+            InitializePerLightRunTime(chooseLightColor.SelectedIndex);//交通灯 三个灯的倒计时时间
+            TrafficLightsTime.InitializeParamsInMainTimer();
+            TrafficLightsTime.InitializeLightsUpSequenceColor(chooseLightColor.SelectedIndex);
             mainTimerTb.Text = "mainTick次数：" + (++mainTimerCount).ToString() + "；" + "mainInterval：" + TrafficLightsTime.trafficLightsTime;
 
         }
-        private void unitCycleTimer_Tick(object sender, EventArgs e)
-        {
-            unitTimerCycle(chooseLightColor.SelectedIndex, TrafficLightsTime.textFontColor, TrafficLightsTime.rLColor, TrafficLightsTime.yLColor, TrafficLightsTime.gLColor);
-            halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
-        }
-
         /// <summary>
-        /// 微循环（0.5s）的动作
+        /// 初始化交通灯(红、黄、绿)各自的倒计时时间（要调用控件属性，无法移动到自定义类中）
         /// </summary>
-        /// <param name="selectLightIndex"></param>
-        /// <param name="textFontColor"></param>
-        /// <param name="rLColor"></param>
-        /// <param name="yLColor"></param>
-        /// <param name="gLColor"></param>
-        private void unitTimerCycle(int selectLightIndex, Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
-        {
-
-            countdownCurrenLightupTbk.Text = TrafficLightsTime.countdownToUI;
-            countdownLightsTbk.Text = (TrafficLightsTime.trafficLightsTime2 + 1).ToString();
-            //倒计时时文本的颜色
-            countdownCurrenLightupTbk.Foreground = new SolidColorBrush(textFontColor);
-            //倒计时时灯的颜色
-            redLight.Fill = new SolidColorBrush(rLColor);
-            yellowLight.Fill = new SolidColorBrush(yLColor);
-            greenLight.Fill = new SolidColorBrush(gLColor);
-        }
-
-
-        /// <summary>
-        /// 初始化交通灯(红、黄、绿)各自的倒计时时间
-        /// </summary>
-        private void InitializePerLightRunTime()
-        {
-            TrafficLightsTime.redLightCountdown = FetchNum(redCount.Text);
-            TrafficLightsTime.yellowLightCountdown = FetchNum(yellowCount.Text);
-            TrafficLightsTime.greenLightCountdown = FetchNum(greenCount.Text);
-        }
         private void InitializePerLightRunTime(int selectedIndex)
         {
             switch (selectedIndex)
@@ -150,42 +117,67 @@ namespace trafficLight
                     break;
             }
         }
-
-
-
-        private void btnOpen_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// UnitTimer.Tick事件调用的方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UnitCycleTimer_Tick(object sender, EventArgs e)
         {
-            //运算符的优先级 ！和&&
-            //IsEnable：当计时器.start()之后IsEnable==False，计时器.stop()后IsEnable==Ture
-            if (firstClick)
-            {
-                LightsColor(chooseLightColor.SelectedIndex);//点击"开始"后，把灯和文本的颜色处理了
-                RunTrafficLight();
-                firstClick = false;
-            }
-            else
-            {
-                MessageBox.Show(mainWindow, "请勿多次单击\"'开始'\"按键");
-            }
+            //为UnitTimerCycle()赋值
+            TrafficLightsTime.LightsUp(chooseLightColor.SelectedIndex);
+            UnitTimerCycle(TrafficLightsTime.textFontColor, TrafficLightsTime.rLColor, TrafficLightsTime.yLColor, TrafficLightsTime.gLColor);
+            halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
+        }
+        /// <summary>
+        /// 微循环（0.5s）的动作（调用控件属性，无法移动到自定义类中）
+        /// </summary>
+        /// <param name="selectLightIndex"></param>
+        /// <param name="textFontColor"></param>
+        /// <param name="rLColor"></param>
+        /// <param name="yLColor"></param>
+        /// <param name="gLColor"></param>
+        private void UnitTimerCycle( Color textFontColor, Color rLColor, Color yLColor, Color gLColor)
+        {
+            countdownCurrenLightupTbk.Text = TrafficLightsTime.countdownToUI.ToString();
+            countdownLightsTbk.Text = (TrafficLightsTime.trafficLightsTime2 + 1).ToString();
+            //倒计时时文本的颜色
+            countdownCurrenLightupTbk.Foreground = new SolidColorBrush(textFontColor);
+            //倒计时时灯的颜色
+            redLight.Fill = new SolidColorBrush(rLColor);
+            yellowLight.Fill = new SolidColorBrush(yLColor);
+            greenLight.Fill = new SolidColorBrush(gLColor);
         }
 
+        private void RestartTimer()
+        {
+            StopTimer();
+            ReInitializeParamThenRestart();
+        }
         /// <summary>
         /// 重启两个计时器（注意Timer.Start()的顺序）
         /// </summary>
         private void ReInitializeParamThenRestart()
         {
+            //循环之初要处理的数据（MainTimer_Tick）
             InitializePerLightRunTime(chooseLightColor.SelectedIndex);//交通灯 三个灯的倒计时时间
-            TrafficLightsTime.mainTimerInitializeParams();
-            countdownCurrenLightupTbk.Text = TrafficLightsTime.countdownToUI;
+            TrafficLightsTime.InitializeParamsInMainTimer();
+            TrafficLightsTime.InitializeLightsUpSequenceColor(chooseLightColor.SelectedIndex);
+
+            //每个循环要做的事情（UnitTimer_Tick）
+            TrafficLightsTime.LightsUp(chooseLightColor.SelectedIndex);
+            countdownCurrenLightupTbk.Text = TrafficLightsTime.countdownToUI.ToString();
             countdownLightsTbk.Text = (TrafficLightsTime.trafficLightsTime2 + 1).ToString();
             countdownCurrenLightupTbk.Foreground = new SolidColorBrush(TrafficLightsTime.textFontColor);
             redLight.Fill = new SolidColorBrush(TrafficLightsTime.rLColor);
             yellowLight.Fill = new SolidColorBrush(TrafficLightsTime.yLColor);
             greenLight.Fill = new SolidColorBrush(TrafficLightsTime.gLColor);
+
+            //启动计时器，第一个Tick发生在Interval时间之后
             ProceedTimer();
         }
         /// <summary>
-        /// 停止计时器 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会发生
+        /// Stop Timer 如果计时器.start()之后将IsEnable赋值为False，则计时器会停止，Tick事件不会再发生
         /// </summary>
         private void StopTimer()
         {
@@ -193,7 +185,7 @@ namespace trafficLight
             mainCycleTimer.IsEnabled = false;
         }
         /// <summary>
-        /// 重启Timer，具体操作为给Timer.IsEnabled赋值为ture<==>Timer.Start()
+        /// Restart Timer，具体操作为给Timer.IsEnabled赋值为ture<==>Timer.Start()
         /// </summary>
         private void ProceedTimer()
         {
@@ -202,31 +194,7 @@ namespace trafficLight
             mainCycleTimer.IsEnabled = !false;
             unitCycleTimer.IsEnabled = !false;
         }
-        /// <summary>
-        /// ComboBox中选择某种颜色的灯的时候开始
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LightSelected(object sender, RoutedEventArgs e)
-        {
-            StopTimer();
-            ComboBoxItem cbItem = sender as ComboBoxItem;
-            LightsColor(cbItem.Content.ToString());//设置灯和文本的颜色
-            //2016/01/11 待加入：在选择变换的灯时，立即把对应的颜色跳转过来         
-            if (!firstClick)
-            {
-                RestartTimer();
-            }
-        }
 
-        private void btnDisableTimer_Click(object sender, RoutedEventArgs e)
-        {
-            StopTimer();
-        }
-        private void btnEnableTimer_Click(object sender, RoutedEventArgs e)
-        {
-            ReInitializeParamThenRestart();
-        }
 
         /// <summary>
         /// 获得数字：把字符串转换为数字，不可转化为数字时返回0
@@ -263,6 +231,68 @@ namespace trafficLight
             }
             return isSuitable;
         }
+        private bool IsTextChanged(string textBefore, string textAfter)
+        {
+            //得加入记录 三个lightTet是否改动的记录
+            bool isTextChanged = false;
+            if (IsInputTextSuitable(textBefore, textAfter))
+            {
+                if (textBefore != textAfter)
+                {
+                    isTextChanged = !false;
+                }
+            }
+            return isTextChanged;
+        }
+
+
+        private void btnOpen_Click(object sender, RoutedEventArgs e)
+        {
+            //运算符的优先级 ！和&&
+            //IsEnable：当计时器.start()之后IsEnable==False，计时器.stop()后IsEnable==Ture
+            if (firstClick)
+            {
+                //点击"开始"后，立即跳至对应的交通灯的颜色（文本&灯）
+                LightsColor(chooseLightColor.SelectedIndex);
+                RunTrafficLight();
+                firstClick = false;
+            }
+            else
+            {
+                MessageBox.Show(mainWindow, "请勿多次单击\"'开始'\"按键");
+            }
+        }
+        private void btnDisableTimer_Click(object sender, RoutedEventArgs e)
+        {
+            StopTimer();
+        }
+        private void btnEnableTimer_Click(object sender, RoutedEventArgs e)
+        {
+            ReInitializeParamThenRestart();
+        }
+        /// <summary>
+        /// NoChanges则继续，HaveChangd则重新计时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
+            bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
+            bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
+            if (redCountChanged || yellowCountChangded || greenCountChanged)
+            {
+                StopTimer();
+                ReInitializeParamThenRestart();
+            }
+            else
+            {
+                ProceedTimer();
+            }
+            setLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
+        }
+                
+        
 
         /// <summary>
         /// Occurs when the keyboard is focused on this element
@@ -313,48 +343,9 @@ namespace trafficLight
                 default:
                     break;
             }
-        }
+        }     
 
-        private bool IsTextChanged(string textBefore, string textAfter)
-        {
-            //得加入记录 三个lightTet是否改动的记录
-            bool isTextChanged = false;
-            if (IsInputTextSuitable(textBefore, textAfter))
-            {
-                if (textBefore != textAfter)
-                {
-                    isTextChanged = !false;
-                }
-            }
-            return isTextChanged;
-        }
-
-        private void RestartTimer()
-        {
-            StopTimer();
-            ReInitializeParamThenRestart();
-        }
-        /// <summary>
-        /// NoChanges则继续，HaveChangd则重新计时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
-            bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
-            bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
-            if (redCountChanged || yellowCountChangded || greenCountChanged)
-            {
-                StopTimer();
-                ReInitializeParamThenRestart();
-            }
-            else
-            {
-                ProceedTimer();
-            }
-            setLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
-        }
+        
 
         /// <summary>
         /// 根据ComboBox的SelectedIndex(序号)对应的ComboBoxItem.Content来判断当前灯的颜色,和倒计时文本的颜色
@@ -443,129 +434,7 @@ namespace trafficLight
             return TrafficLightsTime.oneLightUp;
             #endregion
         }
-
-        /// <summary>
-        /// 通过获取当前灯的颜色来判断否是绿灯
-        /// </summary>
-        /// <returns></returns>
-        public bool IsGreenLight()
-        {
-
-            bool isGreenlight = false;
-            //if (LightUpColor() == "绿色")
-            if (TrafficLightsTime.oneLightUp == "绿色")//
-            {
-                isGreenlight = !false;
-            }
-            return isGreenlight;
-        }
-        /// <summary>
-        /// 还没处理好
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void btnEvent(object sender, RoutedEventArgs e)
-        {
-            int addTime = 55;
-            int addtime2 = addTime * 2;
-            int time0 = addTime % TrafficLightsTime.trafficLightsTime2;
-
-            //int time0 = TrafficLightsTime.trafficLightsTime2 + 1;
-            int surplusTimeOfLightUp = 0;
-            int surPlusTimeOfMainTimer = 0;
-
-
-            switch (LightUpColor())//当前灯的颜色
-            {
-                case "红"://红 黄 绿  强制红，默认也为红 ygLTime grLTime ryLtime trafficLightsTime2
-                    #region 红30s 黄5s 绿15s 交通灯的颜色变化顺序默认为：红 黄 绿
-
-                    if (time0 > TrafficLightsTime.ygLTime)//红灯30s，后5s时红黄闪烁（默认值为30s）
-                    {//红
-
-                    }
-                    else if (time0 <= TrafficLightsTime.ygLTime && time0 > TrafficLightsTime.greenLightTime1)//黄灯5s，后5s时黄绿闪烁（默认值为5s）
-                    {//黄
-
-                    }
-                    else if (time0 <= TrafficLightsTime.greenLightTime1 && time0 >= 0)//绿灯15s，后5s时绿红闪烁（默认值为15s）
-                    {//绿
-
-                    }
-                    else
-                    {
-                        //return "BUG";
-                    }
-
-                    #endregion
-                    break;
-                case "黄"://黄 绿 红 强制黄灯开始
-                    #region 黄5s 绿15s 红30s 交通灯的颜色变化顺序默认为：红 黄 绿
-                    if (time0 > TrafficLightsTime.grLTime)//红灯30s，后5s时红黄闪烁
-                    {//黄
-
-                    }
-                    else if (time0 <= TrafficLightsTime.grLTime && time0 > TrafficLightsTime.redLightTime1)
-                    {//绿
-
-                    }
-                    else if (time0 <= TrafficLightsTime.redLightTime1 && time0 > 0)
-                    {//红
-
-                    }
-                    else
-                    {
-                        //return "BUG";
-                    }
-                    #endregion
-                    break;
-                case "绿"://绿 红 黄 强制绿灯开始
-                    #region 绿15s 红30s 黄5s 交通灯的颜色变化顺序默认为：红 黄 绿
-                    if (time0 > TrafficLightsTime.ryLTime)//红灯30s，后5s时红黄闪烁
-                    {//绿
-
-                    }
-                    else if (time0 <= TrafficLightsTime.ryLTime && time0 > TrafficLightsTime.yellowLightTime1)
-                    {//红
-
-                    }
-                    else if (time0 <= TrafficLightsTime.yellowLightTime1 && time0 > 0)
-                    {//黄
-
-                    }
-                    else
-                    {
-                        //return "BUG";
-                    }
-                    #endregion
-                    break;
-                default://默认
-                    #region 红30s 黄5s 绿15s 交通灯的颜色变化顺序默认为：红 黄 绿
-
-                    if (time0 > TrafficLightsTime.ygLTime)//红灯30s，后5s时红黄闪烁（默认值为30s）
-                    {
-
-                    }
-                    else if (time0 <= TrafficLightsTime.ygLTime && time0 > TrafficLightsTime.greenLightTime1)//黄灯5s，后5s时黄绿闪烁（默认值为5s）
-                    {
-
-                    }
-                    else if (time0 <= TrafficLightsTime.greenLightTime1 && time0 > 0)//绿灯15s，后5s时绿红闪烁（默认值为15s）
-                    {
-
-                    }
-                    else
-                    {
-                        //return "BUG";
-                    }
-
-                    #endregion
-                    break;
-            }
-
-            //countdownLightsTbk.Text = (TrafficLightsTime.trafficLightsTime2 + 1).ToString();
-            //return TrafficLightsTime.lightUp;//返回当前亮的灯
-        }
+               
 
         private void chooseLightColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -581,6 +450,32 @@ namespace trafficLight
             }
         }
 
+
+
+
+
+        private void InitializePerLightRunTime()
+        {
+            //TrafficLightsTime.redLightCountdown = FetchNum(redCount.Text);
+            //TrafficLightsTime.yellowLightCountdown = FetchNum(yellowCount.Text);
+            //TrafficLightsTime.greenLightCountdown = FetchNum(greenCount.Text);
+        }
+        /// <summary>
+        /// ComboBox中选择某种颜色的灯的时候开始
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LightSelected(object sender, RoutedEventArgs e)
+        {
+            StopTimer();
+            ComboBoxItem cbItem = sender as ComboBoxItem;
+            LightsColor(cbItem.Content.ToString());//设置灯和文本的颜色
+            //2016/01/11 待加入：在选择变换的灯时，立即把对应的颜色跳转过来         
+            if (!firstClick)
+            {
+                RestartTimer();
+            }
+        }
 
     }
 }

@@ -30,6 +30,12 @@
 
   01/12/2016
   1.所做更改提到的first、second、third，ComboBoxItem.IsSelected==firstlight,ComboBox.SelectedIndex==0时，红为first，黄为second，绿为third； ComboBox.SelectedIndex==1时，黄为first，绿为second，红为third；ComboBox.SelectedIndex==2时，绿为first，红为second，黄为third；
-  
+  2.cd等价于countdown（倒计时，冷却时间）
+
+  01/13/2016
+  1.把自定义的函数（方法？）用Pascal命名规则来进行更改
+  2.编写Code，一定要目的性要，有代表性的事情：定义一个函数的时候，形参是否使用，形参有什么意义，返回值类型是什么，函数的语句块要实现什么功能，列表出来，一一完成；
+  3.MainTimerTick要做的事：①InitializePerLightRuntime(ComboBox.SelectedIndex)-初始化每个灯的runtime；②InitializeParamsInMainTimer()根据①得到要用的数据；③InitializeLightsUpSequenceColor(ComboBox.SelectedIndex)亮起的顺序，可以合并到①中，但为了条例清晰，对功能、作用一目了然，分开写；
+  4.UnitTimerTick要做的事：①TrafficLightsTime.LightsUp(ComboBox.SelectedIndex)；②从自定义类TrafficLightsTime中调用主界面控件属性所需要的值；
 
 </软件要求及改动追踪>

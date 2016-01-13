@@ -8,143 +8,27 @@ namespace trafficLight
     /// </summary>
     class TrafficLightsTime
     {
+        //四种颜色分别为：红、黄、绿、灰
+        public static Color Red = Color.FromRgb(255, 0, 0);
+        public static Color Yellow = Color.FromRgb(255, 255, 0);
+        public static Color Green = Color.FromRgb(0, 255, 0);
+        public static Color Gray = Color.FromRgb(86, 86, 86);
+
         //当前在亮的那盏灯
         public static string oneLightUp;
         public static string firstLightUpCountdown;
         public static string secondLightUpCountdown;
         public static string thirdLightUpCountdown;
 
-
         public static int firstLightRuntime;
         public static int secondLightRuntime;
         public static int thirdLightRuntime;
         //当前灯状态倒计时
         public static int countdownToUI;
-        #region Here have params:定义四种颜色
-        //四种颜色分别为：红、黄、绿、灰
-        public static Color Red = Color.FromRgb(255, 0, 0);
-        public static Color Yellow = Color.FromRgb(255, 255, 0);
-        public static Color Green = Color.FromRgb(0, 255, 0);
-        public static Color Gray = Color.FromRgb(86, 86, 86);
-        #endregion 
-         
-        #region Here have params:红绿灯的倒计时时间(从界面中获取)
-        public static int surplusTime;
-        //下一次红、黄、绿分别需要的时间；
-        public static int rLNextTime;
-        public static int yLNextTime;
-        public static int gLNextTime;
-        #endregion
 
-        #region Here have params: 交通各颜色变化
         public static Color firstLightUpColor;
         public static Color secondLightUpColor;
         public static Color thirdLightUpColor;
-        public static void FirstLightUpColor(int selectedIndex)
-        {
-            switch (selectedIndex)
-            {
-                case 0:
-                    RedLightUpColor();
-                    firstLightUpColor = Red;
-                    secondLightUpColor = Yellow;
-                    thirdLightUpColor = Green;
-                    break;
-                case 1:
-                    YellowLightUpColor();
-                    firstLightUpColor = Yellow;
-                    break;
-                case 2:
-                    GreenLightUpColor();
-                    firstLightUpColor = Green;
-                    break;
-                case 3:
-                    break;
-            }
-        }
-        public static void SecondLightUpColor(int selectedIndex)
-        {
-            switch (selectedIndex)
-            {
-                case 0:
-                    YellowLightUpColor();
-                    secondLightUpColor = Yellow;
-                    break;
-                case 1:
-                    GreenLightUpColor();
-                    secondLightUpColor = Green;
-                    break;
-                case 2:
-                    RedLightUpColor();
-                    secondLightUpColor = Red;
-                    break;
-                case 3:
-                    break;
-            }
-        }
-        public static void ThirdLightUpColor(int selectedIndex)
-        {
-            switch (selectedIndex)
-            {
-                case 0:
-                    GreenLightUpColor();
-                    thirdLightUpColor = Green;
-                    break;
-                case 1:
-                    RedLightUpColor();
-                    thirdLightUpColor = Red;
-                    break;
-                case 2:
-                    YellowLightUpColor();
-                    thirdLightUpColor = Yellow;
-                    break;
-                case 3:
-                    break;
-            }
-        }
-        public static void AllLightsUpColor(int selectedIndex)
-        {
-            switch (selectedIndex)
-            {
-                case 0:
-                    firstLightUpColor = Red;
-                    secondLightUpColor = Yellow;
-                    thirdLightUpColor = Green;
-                    break;
-                case 1:
-                    firstLightUpColor = Yellow;
-                    secondLightUpColor = Green;
-                    thirdLightUpColor = Red;
-                    break;
-                case 2:
-                    firstLightUpColor = Green;
-                    secondLightUpColor = Red;
-                    thirdLightUpColor = Yellow;
-                    break;
-                case 3:
-                    break;
-            }
-        }
-        public static void TextFontColor(int tempTime,Color frontColor, Color lateColor)
-        {
-            if (tempTime>10)
-            {
-                textFontColor = frontColor;
-            }
-            else
-            {
-                //动画，偶数的时候为lateColor,奇数的时候为frontColor
-                if (tempTime%2==0)//
-                {
-                    textFontColor = lateColor;
-                }
-                else
-                {
-                    textFontColor = frontColor;
-                }
-            }
-        }
-
         /// <summary>
         /// 红灯的颜色
         /// </summary>
@@ -162,7 +46,172 @@ namespace trafficLight
         /// 字体颜色
         /// </summary>
         public static Color textFontColor;
-        #endregion
+
+
+        /// <summary>
+        /// ComboBox.SelectedIndex确定的情况下，交通灯亮起的第一盏灯为：0,red;1,yellow;2,green;
+        /// </summary>
+        /// <param name="selectedIndex"></param>
+        public static void FirstLightUpColor(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    RedLightUpColor();
+                    //firstLightUpColor = Red;
+                    break;
+                case 1:
+                    YellowLightUpColor();
+                    //firstLightUpColor = Yellow;
+                    break;
+                case 2:
+                    GreenLightUpColor();
+                    //firstLightUpColor = Green;
+                    break;
+                default:
+                    break;
+            }
+        }
+        /// <summary>
+        /// ComboBox.SelectedIndex确定的情况下，交通灯亮起的第二盏灯为：0,yellow;1,green;2,red;
+        /// </summary>
+        /// <param name="selectedIndex"></param>
+        public static void SecondLightUpColor(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    YellowLightUpColor();
+                    //secondLightUpColor = Yellow;
+                    break;
+                case 1:
+                    GreenLightUpColor();
+                    //secondLightUpColor = Green;
+                    break;
+                case 2:
+                    RedLightUpColor();
+                    //secondLightUpColor = Red;
+                    break;
+                default:
+                    break;
+            }
+        }
+        /// <summary>
+        /// ComboBox.SelectedIndex确定的情况下，交通灯亮起的第三盏灯为：0,green;1,red;2,yellow;
+        /// </summary>
+        /// <param name="selectedIndex"></param>
+        public static void ThirdLightUpColor(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    GreenLightUpColor();
+                    //thirdLightUpColor = Green;
+                    break;
+                case 1:
+                    RedLightUpColor();
+                    //thirdLightUpColor = Red;
+                    break;
+                case 2:
+                    YellowLightUpColor();
+                    //thirdLightUpColor = Yellow;
+                    break;
+                default:
+                    break;
+            }
+        }
+        /// <summary>
+        /// ComboBox.SelectedIndex确定的情况下，交通灯颜色变化的顺序：
+        /// 0:red,yellow,green;1:yellow,green,red;2:green,red,yellow
+        /// </summary>
+        /// <param name="selectedIndex"></param>
+        public static void InitializeLightsUpSequenceColor(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    firstLightUpColor = Red;
+                    secondLightUpColor = Yellow;
+                    thirdLightUpColor = Green;
+                    break;
+                case 1:
+                    firstLightUpColor = Yellow;
+                    secondLightUpColor = Green;
+                    thirdLightUpColor = Red;
+                    break;
+                case 2:
+                    firstLightUpColor = Green;
+                    secondLightUpColor = Red;
+                    thirdLightUpColor = Yellow;
+                    break;
+                default:
+                    break;
+            }
+        }
+        /// <summary>
+        /// 字体颜色
+        /// </summary>
+        /// <param name="tempTime">当前状态灯的运行时间，后5s为动画</param>
+        /// <param name="frontColor">当前状态灯的颜色</param>
+        /// <param name="lateColor">下一灯的颜色</param>
+        public static void TextFontColor(int tempTime, Color frontColor, Color lateColor)
+        {
+            if (tempTime > 10)
+            {
+                textFontColor = frontColor;
+            }
+            else
+            {
+                //动画，偶数的时候为lateColor,奇数的时候为frontColor
+                if (tempTime % 2 == 0)//
+                {
+                    textFontColor = lateColor;
+                }
+                else
+                {
+                    textFontColor = frontColor;
+                }
+            }
+        }
+        /// <summary>
+        /// 每个周期内三种灯色的循环，倒计时，
+        /// </summary>
+        /// <param name="selectedIndex">ComboBox.SelectedIndex</param>
+        public static void LightsUp(int selectedIndex)
+        {
+            //FirstLightUpColor(selectedIndex);
+            //SecondLightUpColor(selectedIndex);
+            //ThirdLightUpColor(selectedIndex);
+            //使用此函数时，需要提前把将用到的参数准备好，
+            //包括：firstLightUpColor、secondLightUpColor、thirdLightUpColor
+            //灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
+            if (trafficLightsTime2 > s_tLightRuntime)
+            {
+                FirstLightUpColor(selectedIndex);//灯的颜色
+                TextFontColor(firstLightRuntime2, firstLightUpColor, secondLightUpColor);//字体颜色（包括后5s的动画）
+                countdownToUI = (firstLightRuntime2 + 1) / 2;//倒计时
+                trafficLightsTime2--;//自减，为进下次循环处理数据
+                firstLightRuntime2--;
+            }
+            else if ((trafficLightsTime2 <= s_tLightRuntime) && (trafficLightsTime2 > thirdLightRuntime2))
+            {//灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
+                SecondLightUpColor(selectedIndex);
+                TextFontColor(firstLightRuntime2, secondLightUpColor, thirdLightUpColor);
+                countdownToUI = (secondLightRuntime2 + 1) / 2;
+                trafficLightsTime2--;
+                secondLightRuntime2--;
+            }
+            else if (trafficLightsTime2 <= thirdLightRuntime2)
+            {
+                ThirdLightUpColor(selectedIndex);
+                TextFontColor(thirdLightRuntime2, thirdLightUpColor, firstLightUpColor);
+                countdownToUI = (thirdLightRuntime2 + 1) / 2;
+                trafficLightsTime2--;
+                thirdLightRuntime2--;
+            }
+        }
+
+
 
         #region Here have params:红绿灯周期时间
         public static int s_tLightRuntime;
@@ -181,7 +230,7 @@ namespace trafficLight
         /// </summary>
         public static int redLightCountdown;
         public static int redLightCountdownText;
-        public static int redLightTime1;
+        public static int firstLightRuntime1;
         /// <summary>
         /// redLightTime*2 默认为30s*2=60
         /// </summary>
@@ -191,7 +240,7 @@ namespace trafficLight
         /// </summary>
         public static int yellowLightCountdown;
         public static int yellowLightCountdowntText;
-        public static int yellowLightTime1;
+        public static int secondLightRuntime1;
         /// <summary>
         /// yellowLightTime*2 默认为5s*2=10
         /// </summary>
@@ -201,7 +250,7 @@ namespace trafficLight
         /// </summary>
         public static int greenLightCountdown;
         public static int greenLightCountdownText;
-        public static int greenLightTime1;
+        public static int thirdLightRuntime1;
         /// <summary>
         /// greenLightTime*2 默认为15s*2=30
         /// </summary>
@@ -220,14 +269,14 @@ namespace trafficLight
         /// <summary>
         /// 设置mainTimer.Tick所用的数据（mainCycleTimer_Tick里使用的方法）
         /// </summary>
-        public static void mainTimerInitializeParams( )
+        public static void InitializeParamsInMainTimer()
         {
             trafficLightsTime = firstLightRuntime + secondLightRuntime + secondLightRuntime;
 
             //作为“常量使用”
-            redLightTime1 = firstLightRuntime * 2;
-            yellowLightTime1 = secondLightRuntime * 2;
-            greenLightTime1 = secondLightRuntime * 2;
+            firstLightRuntime1 = firstLightRuntime * 2;
+            secondLightRuntime1 = secondLightRuntime * 2;
+            thirdLightRuntime1 = secondLightRuntime * 2;
             //返回倒计时数字(文本)
             firstLightRuntime2 = firstLightRuntime * 2;
             secondLightRuntime2 = secondLightRuntime * 2;
@@ -238,7 +287,7 @@ namespace trafficLight
             s_tLightRuntime = (secondLightRuntime + thirdLightRuntime) * 2;
             t_fLightRuntime = (thirdLightRuntime + firstLightRuntime) * 2;
             f_sLightRuntime = (firstLightRuntime + secondLightRuntime) * 2;
-         }
+        }
 
 
         /// <summary>
@@ -345,36 +394,7 @@ namespace trafficLight
         /// 用此函数前，需用到：mainTimerInitializeParams();AllLightsUpColor(selectedIndex);初始化其所用变量
         /// </summary>
         /// <param name="selectedIndex"></param>
-        private static void LightsUp(int selectedIndex)
-        {
-            //使用此函数时，需要提前把将用到的参数准备好，
-            //包括：firstLightUpColor、secondLightUpColor、thirdLightUpColor
-            //灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
-            if (trafficLightsTime2 > s_tLightRuntime )
-            {
-                FirstLightUpColor(selectedIndex);//灯的颜色
-                TextFontColor(firstLightRuntime2, firstLightUpColor, secondLightUpColor);//字体颜色（包括后5s的动画）
-                countdownToUI = (firstLightRuntime2+1)/2;//倒计时
-                trafficLightsTime2--;//自减，为进下次循环处理数据
-                firstLightRuntime2--;
-            }
-            else if ((trafficLightsTime2 <= s_tLightRuntime ) && (trafficLightsTime2 > thirdLightRuntime2 ))
-            {//灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
-                SecondLightUpColor(selectedIndex);
-                TextFontColor(firstLightRuntime2, secondLightUpColor, thirdLightUpColor);
-                countdownToUI = (secondLightRuntime2 + 1) / 2;
-                trafficLightsTime2--;
-                secondLightRuntime2--;
-            }
-            else if (trafficLightsTime2 <= thirdLightRuntime2)
-            {
-                ThirdLightUpColor(selectedIndex);
-                TextFontColor(thirdLightRuntime2, thirdLightUpColor, firstLightUpColor);
-                countdownToUI = (thirdLightRuntime2 + 1) / 2;
-                trafficLightsTime2--;
-                thirdLightRuntime2--;
-            }
-        }
+
         private static string PerLightTimeRunTime(int selectedIndex, int allLightTimeSum, int twoLightTimeSum, int oneLightTime)
         {
             string countdownTime = "";
@@ -446,7 +466,7 @@ namespace trafficLight
         /// 例：当redLightTime=60,59,58,57……4,3,2,1时，return的值分别为：30,30,29,29……2,2,1,1
         /// </summary>
         /// <returns>交通灯倒计时时间显示</returns>
-        public static string TextFontColor(int selectedIndex,int tempTime)
+        public static string cdContentAndColor(int selectedIndex, int tempTime)
         {//每种颜色的灯 倒计时的文本
             Color originalColor;
             Color theOtherColor;
@@ -563,6 +583,8 @@ namespace trafficLight
         }
 
 
+
+
         private static void RedLightUpColor()
         {
             rLColor = Red;
@@ -594,9 +616,9 @@ namespace trafficLight
         {
             string countdownTime = "";
 
-            s_tLightRuntime = secondLightRuntime + thirdLightRuntime;
-            t_fLightRuntime = thirdLightRuntime + firstLightRuntime;
-            f_sLightRuntime = firstLightRuntime + secondLightRuntime;
+            //s_tLightRuntime = secondLightRuntime + thirdLightRuntime;
+            //t_fLightRuntime = thirdLightRuntime + firstLightRuntime;
+            //f_sLightRuntime = firstLightRuntime + secondLightRuntime;
 
             if (trafficLightsTime2 > s_tLightRuntime * 2)
             {
@@ -618,9 +640,9 @@ namespace trafficLight
             trafficLightsTime = rTime + yTime + gTime;
 
             //作为“常量使用”
-            redLightTime1 = rTime * 2;
-            yellowLightTime1 = yTime * 2;
-            greenLightTime1 = gTime * 2;
+            firstLightRuntime1 = rTime * 2;
+            secondLightRuntime1 = yTime * 2;
+            thirdLightRuntime1 = gTime * 2;
 
             firstLightRuntime2 = rTime * 2;
             secondLightRuntime2 = yTime * 2;
@@ -639,7 +661,7 @@ namespace trafficLight
             switch (selectedIndex)
             {
                 case 0:
-                    countdownTime = RedLightUp();
+                    //countdownTime = RedLightUp();
                     break;
                 case 1:
                     countdownTime = YellowLightUp();
@@ -664,7 +686,7 @@ namespace trafficLight
                     countdownTime = GreenLightUp();
                     break;
                 case 2:
-                    countdownTime = RedLightUp();
+                    //countdownTime = RedLightUp();
                     break;
                 default:
                     break;
@@ -680,7 +702,7 @@ namespace trafficLight
                     countdownTime = GreenLightUp();
                     break;
                 case 1:
-                    countdownTime = RedLightUp();
+                    //countdownTime = RedLightUp();
                     break;
                 case 2:
                     countdownTime = YellowLightUp();
@@ -689,6 +711,24 @@ namespace trafficLight
                     break;
             }
             return countdownTime;
+        }
+
+
+
+        /// <summary>
+        /// 通过获取当前灯的颜色来判断否是绿灯
+        /// </summary>
+        /// <returns></returns>
+        public bool IsGreenLight()
+        {
+
+            bool isGreenlight = false;
+            //if (LightUpColor() == "绿色")
+            if (oneLightUp == "绿色")//
+            {
+                isGreenlight = !false;
+            }
+            return isGreenlight;
         }
     }
 }
