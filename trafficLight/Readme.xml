@@ -49,5 +49,10 @@
     5.增加函数，执行的功能：以函数调用方式得到自定义类中的值；
     6.设置红绿灯时间的按钮，Click事件：得到Click事件发生时，所要设置的红绿灯的时间，与GotKeyboardFocus事件发生时的红绿灯时间做对比从而得出bool IsChanged(before,after)的值，三个灯的时间有至少有一个有改变时，ReInitializeParamsThenRestart();
     7.Timer.Start()之前要给Timer.Interval赋值，Tick事件所调用的函数一般不会改变，所以重启计时器时一般不需要再对Timer.Tick事件进行委托；
+
+    01/14/2016
+    1.增加配置文件，以其对红绿灯countdown时间的设置；
+    2.从App.config中读取三个灯的runtime；
+    3.点击"设置"按钮：SetLightTimeBtn，SetLightTimeBtn.Click事件取得要设置的时间。其中config.Save()保存App.config文件中，在调试状态下发现App.config文件更新没效果，为什么呢？不晓得。但如果把生成的.exe执行程序和其依赖的一些dll等文件复制到另外一个新的文件夹，再运行就有效果了。结论是：调试状态下的config.Save()及ConfigurationManager.RefreshSection("appsettings")只是更新了内存中的值，但程序实际上已经能够做到想要的效果了。
   </改动追踪>
 </软件要求及改动追踪>

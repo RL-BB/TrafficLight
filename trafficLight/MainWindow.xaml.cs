@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Drawing;
-using System.Timers;
 
 namespace TrafficLights
 {
@@ -53,7 +43,7 @@ namespace TrafficLights
         {
 
             InitializeComponent();
-
+            //TrafficLightsTime.ReadLightCd(redCount.Text);
             mainCycleTimer.Tick += MainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
             unitCycleTimer.Tick += UnitCycleTimer_Tick;
 
@@ -92,29 +82,19 @@ namespace TrafficLights
         /// </summary>
         private void InitializePerLightRunTime(int selectedIndex)
         {
-            switch (selectedIndex)
-            {
-                case 0:
-                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
-                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
-                    break;
-                case 1:
-                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
-                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
-                    break;
-                case 2:
-                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
-                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
-                    break;
-                default:
-                    TrafficLightsTime.firstLightRuntime = TrafficLightsTime.FetchNum(redCount.Text);
-                    TrafficLightsTime.secondLightRuntime = TrafficLightsTime.FetchNum(yellowCount.Text);
-                    TrafficLightsTime.thirdLightRuntime = TrafficLightsTime.FetchNum(greenCount.Text);
-                    break;
-            }
+            ValueLightsText();
+            string rName = redCount.Name;
+            string yName = yellowCount.Name;
+            string gName = greenCount.Name;
+            TrafficLightsTime.InitializePerLightRunTime(selectedIndex, rName, yName, gName);
+            //redCount.Text=
+
+        }
+        private void ValueLightsText()
+        {
+            redCount.Text = TrafficLightsTime.RdLightCd(redCount.Name).ToString();
+            yellowCount.Text = TrafficLightsTime.RdLightCd(yellowCount.Name).ToString();
+            greenCount.Text = TrafficLightsTime.RdLightCd(greenCount.Name).ToString();
         }
         /// <summary>
         /// UnitTimer.Tick事件调用的方法
@@ -194,8 +174,8 @@ namespace TrafficLights
             unitCycleTimer.IsEnabled = !false;
         }
 
-                
-        
+
+
         private static bool IsInputTextSuitable(string textAfter)
         {
             bool isSuitable = false;
@@ -212,7 +192,7 @@ namespace TrafficLights
         {
             //得加入记录 三个lightTet是否改动的记录
             bool isTextChanged = false;
-            if (IsInputTextSuitable( textAfter))
+            if (IsInputTextSuitable(textAfter))
             {
                 if (textBefore != textAfter)
                 {
@@ -252,16 +232,24 @@ namespace TrafficLights
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void setLightTimeBtn_Click(object sender, RoutedEventArgs e)
+        private void SetLightTimeBtn_Click(object sender, RoutedEventArgs e)
         {
+            //WrtLightCd(string rCount, string yCount, string gCount)
             tempTextRedAfter = TrafficLightsTime.FetchNum(redCount.Text).ToString();
             tempTextYellowAfter = TrafficLightsTime.FetchNum(yellowCount.Text).ToString();
             tempTextGreenAfter = TrafficLightsTime.FetchNum(greenCount.Text).ToString();
 
-
             bool redCountChanged = IsTextChanged(tempTextRedBefore, tempTextRedAfter);
             bool yellowCountChangded = IsTextChanged(tempTextYellowBefore, tempTextYellowAfter);
             bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
+
+            //把更改后的内容保存到App.config中
+            string rCount = StrValue(redCountChanged, tempTextRedAfter);
+            string yCount = StrValue(yellowCountChangded, tempTextYellowAfter);
+            string gCount = StrValue(greenCountChanged, tempTextGreenAfter);
+            TrafficLightsTime.WrtLightCd(rCount, yCount, gCount);
+
+
             if (redCountChanged || yellowCountChangded || greenCountChanged)
             {
                 StopTimer();
@@ -271,10 +259,18 @@ namespace TrafficLights
             {
                 ProceedTimer();
             }
-            setLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
+            SetLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
         }
 
-
+        public static string StrValue(bool isChanged, string strValue)
+        {
+            string returnValue = null;
+            if (isChanged)
+            {
+                returnValue = strValue;
+            }
+            return returnValue;
+        }
 
         /// <summary>
         /// Occurs when the keyboard is focused on this element
@@ -302,33 +298,6 @@ namespace TrafficLights
                     break;
             }
         }
-        /// <summary>
-        /// Occurs when the keyboard is no longer focused on this element
-        /// </summary>
-        /// <param name="sender">element here means TextBox</param>
-        /// <param name="e">？？？？</param>
-        private void LightCount_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            //string typeName = sender.GetType().Name;
-            TextBox setLightCountTbx = sender as TextBox;
-            string setLightCount = setLightCountTbx.Name;
-            switch (setLightCount)
-            {
-                case "redCount":
-                    tempTextRedAfter = setLightCountTbx.Text;
-                    break;
-                case "yellowCount":
-                    tempTextYellowAfter = setLightCountTbx.Text;
-                    break;
-                case "greenCount":
-                    tempTextGreenAfter = setLightCountTbx.Text;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
 
         /// <summary>
         /// 根据ComboBox的SelectedIndex(序号)对应的ComboBoxItem.Content来判断当前灯的颜色,和倒计时文本的颜色

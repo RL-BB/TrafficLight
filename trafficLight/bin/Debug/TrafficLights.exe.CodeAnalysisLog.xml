@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="trafficlights.exe">
      <Messages>
-      <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
+      <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
        <Issue Certainty="95" Level="Error">使用 CLSCompliant(true)来标记 'TrafficLights.exe'，因为它公开外部可见的类型。</Issue>
       </Message>
      </Messages>
@@ -15,24 +15,24 @@
        <Types>
         <Type Name="MainWindow" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#LightCount_LostKeyboardFocus(System.Object,System.Windows.Input.KeyboardFocusChangedEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="311">'MainWindow.LightCount_LostKeyboardFocus(object, KeyboardFocusChangedEventArgs)' 似乎没有上游 public 或 protected 调用方。</Issue>
-            </Message>
-           </Messages>
-          </Member>
           <Member Name="#LightSelected(System.Object,System.Windows.RoutedEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="424">'MainWindow.LightSelected(object, RoutedEventArgs)' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="393">'MainWindow.LightSelected(object, RoutedEventArgs)' 似乎没有上游 public 或 protected 调用方。</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#RestartTimer()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="152">'MainWindow.RestartTimer()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="132">'MainWindow.RestartTimer()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#StrValue(System.Boolean,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="1#" TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="Breaking">
+             <Issue Certainty="95" Level="Error" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="266">更改成员名或参数名 'strValue'，使两者能相互区分。</Issue>
             </Message>
            </Messages>
           </Member>
@@ -40,15 +40,29 @@
         </Type>
         <Type Name="TrafficLightsTime" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
+          <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
            <Issue Certainty="75" Level="Warning">'TrafficLightsTime' 是显然没有实例化过的内部类。如果是这样，请从程序集内移除该代码。如果此内部类只用于包含静态方法，请考虑添加私有构造函数，以阻止编译器生成默认构造函数。</Issue>
           </Message>
          </Messages>
          <Members>
           <Member Name="#AllLightUpColor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 03:18:34Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="296">'TrafficLightsTime.AllLightUpColor()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="298">'TrafficLightsTime.AllLightUpColor()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#IsGreenLight()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="393">从未使用 'TrafficLightsTime.IsGreenLight()' 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#oneLightUp" Kind="Field" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.oneLightUp' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
             </Message>
            </Messages>
           </Member>
@@ -82,6 +96,16 @@
    <MessageLevel Certainty="75">Warning</MessageLevel>
    <File Name="performancerules.dll" Version="14.0.0.0" />
   </Rule>
+  <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+   <Name>避免未使用的私有字段</Name>
+   <Description>检测到程序集内有似乎未访问过的私有字段。如果错误地引发了此冲突，请向 Visual Studio 代码分析团队发送问题报告。</Description>
+   <Resolution Name="Default">似乎从未使用过字段 {0} 或只对它进行过赋值。请使用此字段或将它移除。</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms245042.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="14.0.0.0" />
+  </Rule>
   <Rule TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014">
    <Name>用 CLSCompliantAttribute 标记程序集</Name>
    <Description>程序集应使用 CLSCompliant 特性显式说明其 ClS 遵从性。没有此特性的程序集不符合 CLS。即使程序集、模块或类型的某些部分不符合 CLS，这些程序集、模块或类型本身也可以是符合 CLS 的。适用下列规则: 1) 如果元素标记为 CLSCompliant，则所有不符合 CLS 的成员都必须有参数设置为 false 的 CLSCompliant 特性。2) 对于每个不符合 CLS 的成员，都必须提供一个相应的符合 CLS 的备选成员。</Description>
@@ -91,6 +115,26 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="95">Error</MessageLevel>
    <File Name="designrules.dll" Version="14.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+   <Name>将成员标记为 static</Name>
+   <Description>不访问实例数据或调用实例方法的方法可标记为 Static (在 Visual Basic 中为 Shared)。这样，编译器会向这些成员发出非虚拟调用站点，以防止在运行时对每个调用进行旨在确保当前对象指针为非 null 的检查。这样可以使对性能比较敏感的代码获得显著的性能提升。在某些情况下，无法访问当前对象实例表明存在正确性问题。</Description>
+   <Resolution Name="Default">从未使用 {0} 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms245046.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="14.0.0.0" />
+  </Rule>
+  <Rule TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719">
+   <Name>参数名不应与成员名冲突</Name>
+   <Description>参数名应有别于成员名。</Description>
+   <Resolution Name="Default">更改成员名或参数名 {0}，使两者能相互区分。</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182252.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="namingrules.dll" Version="14.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

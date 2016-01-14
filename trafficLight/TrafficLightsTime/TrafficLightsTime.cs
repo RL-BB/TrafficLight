@@ -1,5 +1,7 @@
 ﻿using System.Windows.Media;
 using System;
+using System.Configuration;
+
 
 namespace TrafficLights
 {
@@ -318,6 +320,71 @@ namespace TrafficLights
         }
 
 
+        //读config文件，赋值给RedCount、YellowCount、GreenCount
+        public static int RdLightCd(string lightCount)
+        {//
+            var strCountdown = ConfigurationManager.AppSettings[lightCount];
+            return Convert.ToInt32(strCountdown);
+        }
+        public static void WrtLightCd(string rCount,string yCount,string gCount)
+        {
+            //string sectionName = "appSettings";
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            if (rCount!=null)
+            {
+                config.AppSettings.Settings["redCount"].Value = rCount;
+            }
+            if (yCount != null)
+            {
+                config.AppSettings.Settings["yellowCount"].Value = yCount;
+            }
+            if (gCount != null)
+            {
+                config.AppSettings.Settings["greenCount"].Value = gCount;
+            }
+            //config.AppSettings.Settings["redCount"].Value = rCount;
+            //config.AppSettings.Settings["yellowCount"].Value = yCount;
+            //config.AppSettings.Settings["greenCount"].Value = gCount;
+            config.Save(ConfigurationSaveMode.Full);
+            //config.Save();
+            ConfigurationManager.RefreshSection("appSettings");
+
+        }
+
+
+
+        public static void InitializePerLightRunTime(int selectedIndex,string rName,string yName,string gName)
+        {
+           
+            switch (selectedIndex)
+            {
+                case 0:
+                    RdAllLightsCd(rName, yName, gName);
+                    break;
+                case 1:
+                    RdAllLightsCd(yName, gName, rName);
+                    break;
+                case 2:
+                    RdAllLightsCd(gName, rName, yName);
+                    break;
+                default:
+                    RdAllLightsCd(rName, yName, gName);
+                    break;
+            }
+        }
+
+        public static void RdAllLightsCd(string fName, string sName, string tName)
+        {
+            firstLightRuntime = RdLightCd(fName);
+            secondLightRuntime = RdLightCd(sName);
+            thirdLightRuntime = RdLightCd(tName);
+        }
+
+
+
+
+
+
         /// <summary>
         /// 通过获取当前灯的颜色来判断否是绿灯
         /// </summary>
@@ -326,11 +393,11 @@ namespace TrafficLights
         {
 
             bool isGreenlight = false;
-            //if (LightUpColor() == "绿色")
-            if (oneLightUp == "绿色")//
-            {
-                isGreenlight = !false;
-            }
+            ////if (LightUpColor() == "绿色")
+            //if (oneLightUp == "绿色")//
+            //{
+            //    isGreenlight = !false;
+            //}
             return isGreenlight;
         }
     }
