@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Drawing;
 using System.Timers;
 
-namespace trafficLight
+namespace TrafficLights
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
@@ -27,31 +27,27 @@ namespace trafficLight
         //0对应btnOPen_Click事件开启的计时器，
         //public DispatcherTimer[] mainCycleTimer;
         //public DispatcherTimer[] unitCycleTimer;
-        public DispatcherTimer mainCycleTimer = new DispatcherTimer();
-        public DispatcherTimer unitCycleTimer = new DispatcherTimer();
+        private DispatcherTimer mainCycleTimer = new DispatcherTimer();
+        private DispatcherTimer unitCycleTimer = new DispatcherTimer();
 
         //窗口初始化时 bool变量默认值为false
         private bool firstClick = !false;
 
-        #region Here have params: 用来判断红绿灯的倒计时时间是否改变 
         private string tempTextRedBefore;
         private string tempTextYellowBefore;
         private string tempTextGreenBefore;
         private string tempTextRedAfter;
         private string tempTextYellowAfter;
         private string tempTextGreenAfter;
-        #endregion
 
-        #region Here have params: 计时器Tick事件运行的次数
         /// <summary>
         /// mainTimer.Tick运行的次数
         /// </summary>
-        protected int mainTimerCount;
+        private int mainTimerCount;
         /// <summary>
         /// unitTimer.Tick事件运行的次数
         /// </summary>
-        protected int unitTimerCount;
-        #endregion
+        private int unitTimerCount;
 
         public MainWindow()
         {
@@ -66,14 +62,14 @@ namespace trafficLight
         void RunTrafficLight()
         {
             InitializePerLightRunTime(chooseLightColor.SelectedIndex);//***初始化Interval；如果没有此行，就获取不到每个交通灯对应的倒计时时间<==>Interval=0；***
+            mainCycleTimer.Start();
             TrafficLightsTime.InitializeParamsInMainTimer();
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
             //mainCycleTimer.Interval = TimeSpan.FromMilliseconds((TrafficLightsTime.firstLightRuntime + TrafficLightsTime.secondLightRuntime + TrafficLightsTime.thirdLightRuntime) * 1000 + 1000);
             mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
-            mainCycleTimer.Start();
 
-            unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
             unitCycleTimer.Start();
+            unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
         }
 
 
@@ -132,10 +128,10 @@ namespace trafficLight
             UnitTimerCycle(TrafficLightsTime.textFontColor, TrafficLightsTime.rLColor, TrafficLightsTime.yLColor, TrafficLightsTime.gLColor);
             halfSencondTimerTb.Text = "unitTick次数：" + (++unitTimerCount) + "；";
         }
+
         /// <summary>
         /// 微循环（0.5s）的动作（调用控件属性，无法移动到自定义类中）
         /// </summary>
-        /// <param name="selectLightIndex"></param>
         /// <param name="textFontColor"></param>
         /// <param name="rLColor"></param>
         /// <param name="yLColor"></param>
@@ -199,15 +195,11 @@ namespace trafficLight
         }
 
                 
-        /// <summary>
-        /// 判断输入的Text是否在在5-120之间（简单的判断，待加入限制：输入必须为数字且不小于5并不大于120）数字5和120待用参数来代替
-        /// </summary>
-        /// <param name="inputText"></param>
-        /// <returns></returns>
-        private bool IsInputTextSuitable(string textBefore, string textAfter)
+        
+        private static bool IsInputTextSuitable(string textAfter)
         {
             bool isSuitable = false;
-            int tempTextBefore = TrafficLightsTime.FetchNum(textBefore);
+            //int tempTextBefore = TrafficLightsTime.FetchNum(textBefore);
             int tempTextAfter = TrafficLightsTime.FetchNum(textAfter);
             //当且仅当修改后的tempText能转换为5到120的数字时
             if ((tempTextAfter >= 5) && (tempTextAfter <= 120))
@@ -216,11 +208,11 @@ namespace trafficLight
             }
             return isSuitable;
         }
-        private bool IsTextChanged(string textBefore, string textAfter)
+        private static bool IsTextChanged(string textBefore, string textAfter)
         {
             //得加入记录 三个lightTet是否改动的记录
             bool isTextChanged = false;
-            if (IsInputTextSuitable(textBefore, textAfter))
+            if (IsInputTextSuitable( textAfter))
             {
                 if (textBefore != textAfter)
                 {
@@ -231,7 +223,7 @@ namespace trafficLight
         }
 
 
-        private void btnOpen_Click(object sender, RoutedEventArgs e)
+        private void btnBegin_Click(object sender, RoutedEventArgs e)
         {
             //运算符的优先级 ！和&&
             //IsEnable：当计时器.start()之后IsEnable==False，计时器.stop()后IsEnable==Ture
@@ -342,9 +334,9 @@ namespace trafficLight
         /// 根据ComboBox的SelectedIndex(序号)对应的ComboBoxItem.Content来判断当前灯的颜色,和倒计时文本的颜色
         /// </summary>
         /// <param name="ComboBoxItemColor"></param>
-        private void LightsColor(int ComboBoxSelectedItem)
+        private void LightsColor(int comboBoxSelectedItem)
         {
-            switch (ComboBoxSelectedItem)
+            switch (comboBoxSelectedItem)
             {
                 //能把下面有顺序的四行代码给重构掉么!有必要考虑下
                 case 0://红、灰、灰
@@ -372,9 +364,9 @@ namespace trafficLight
                     break;
             }
         }
-        private void LightsColor(string ComboBoxSelectedItemContent)//重载
+        private void LightsColor(string cbxSelectedItemContent)//重载
         {
-            switch (ComboBoxSelectedItemContent)
+            switch (cbxSelectedItemContent)
             {
                 //能把下面有顺序的四行代码给重构掉么!有必要考虑下
                 case "红"://红、灰、灰

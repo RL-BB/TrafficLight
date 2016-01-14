@@ -1,13 +1,13 @@
 ﻿using System.Windows.Media;
 using System;
 
-namespace trafficLight
+namespace TrafficLights
 {
 
     /// <summary>
     /// 红绿灯的等待默认时间：红灯30s，黄灯5s，绿灯15s
     /// </summary>
-    class TrafficLightsTime
+    internal class TrafficLightsTime
     {
         //四种颜色分别为：红、黄、绿、灰
         public static Color Red = Color.FromRgb(255, 0, 0);
@@ -46,8 +46,8 @@ namespace trafficLight
         public static Color textFontColor;
 
         public static int s_tLightRuntime;
-        public static int t_fLightRuntime;
-        public static int f_sLightRuntime;
+        //public static int t_fLightRuntime;
+        //public static int f_sLightRuntime;
         /// <summary>
         /// 交通灯运行周期时间：firstLightRuntime+secondLightRuntime+gTime
         /// </summary>
@@ -56,8 +56,8 @@ namespace trafficLight
         /// trafficLightsTime*2 默认为（30+5+15）*2==100
         /// </summary>
         public static int trafficLightsTime2;
-        
-        public static int firstLightRuntime1;
+
+        //public static int firstLightRuntime1;
         /// <summary>
         /// redLightTime*2 默认为30s*2=60
         /// </summary>
@@ -66,16 +66,15 @@ namespace trafficLight
         /// 黄灯计时时间，默认为5s
         /// </summary>
 
-        public static int secondLightRuntime1;
-        /// <summary>
-        /// yellowLightTime*2 默认为5s*2=10
-        /// </summary>
+        //下两行代码不要删除为了理解第三行而存在
+        //public static int secondLightRuntime1;
         public static int secondLightRuntime2;
-                public static int thirdLightRuntime1;
+        public static int thirdLightRuntime1;
         /// <summary>
         /// greenLightTime*2 默认为15s*2=30
         /// </summary>
         public static int thirdLightRuntime2;
+        private string oneLightUp;
 
         /// <summary>
         /// flicker ['flɪkɚ] 闪烁，闪光 倒计时文本闪烁倒计时，每0.5s一次
@@ -220,23 +219,23 @@ namespace trafficLight
             {
                 FirstLightUpColor(selectedIndex);//灯的颜色
                 TextFontColor(firstLightRuntime2, firstLightUpColor, secondLightUpColor);//字体颜色（包括后5s的动画）
-                countdownToUI = DblCountdownToUI(firstLightRuntime2) ;//倒计时
+                countdownToUI = DblCountdownToUI(firstLightRuntime2);//倒计时
                 trafficLightsTime2--;//自减，为进下次循环处理数据
                 firstLightRuntime2--;
             }
-            else if ((trafficLightsTime2 <= s_tLightRuntime) && (trafficLightsTime2 > thirdLightRuntime2))
+            else if ((trafficLightsTime2 <= s_tLightRuntime) && (trafficLightsTime2 > thirdLightRuntime1))
             {//灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
                 SecondLightUpColor(selectedIndex);
                 TextFontColor(secondLightRuntime2, secondLightUpColor, thirdLightUpColor);
-                countdownToUI = DblCountdownToUI(secondLightRuntime2) ;
+                countdownToUI = DblCountdownToUI(secondLightRuntime2);
                 trafficLightsTime2--;
                 secondLightRuntime2--;
             }
-            else if (trafficLightsTime2 <= thirdLightRuntime2)
+            else if (trafficLightsTime2 <= thirdLightRuntime1)
             {
                 ThirdLightUpColor(selectedIndex);
                 TextFontColor(thirdLightRuntime2, thirdLightUpColor, firstLightUpColor);
-                countdownToUI = DblCountdownToUI(thirdLightRuntime2 );
+                countdownToUI = DblCountdownToUI(thirdLightRuntime2);
                 trafficLightsTime2--;
                 thirdLightRuntime2--;
             }
@@ -260,21 +259,21 @@ namespace trafficLight
             trafficLightsTime = TrafficLightsRuntime(); ;
 
             //作为“常量使用”
-            firstLightRuntime1 = firstLightRuntime * 2;
-            secondLightRuntime1 = secondLightRuntime * 2;
+            //firstLightRuntime1 = firstLightRuntime * 2;
+            //secondLightRuntime1 = secondLightRuntime * 2;
             thirdLightRuntime1 = thirdLightRuntime * 2;
             //返回倒计时数字(文本)
             firstLightRuntime2 = firstLightRuntime * 2;
             secondLightRuntime2 = secondLightRuntime * 2;
             thirdLightRuntime2 = thirdLightRuntime * 2;
-            trafficLightsTime2 = TrafficLightsRuntime() * 2;
+            trafficLightsTime2 = trafficLightsTime * 2;
 
             //强制转换至某一颜色的灯后，会用到的变量
             s_tLightRuntime = (secondLightRuntime + thirdLightRuntime) * 2;
-            t_fLightRuntime = (thirdLightRuntime + firstLightRuntime) * 2;
-            f_sLightRuntime = (firstLightRuntime + secondLightRuntime) * 2;
+            //t_fLightRuntime = (thirdLightRuntime + firstLightRuntime) * 2;
+            //f_sLightRuntime = (firstLightRuntime + secondLightRuntime) * 2;
         }
-               
+
         private static void RedLightUpColor()
         {
             rLColor = Red;

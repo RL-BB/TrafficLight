@@ -96,3 +96,4 @@ A:\Documents\0-Backup\TrafficLight\TrafficLight\trafficLight\obj\Debug\trafficLi
 A:\Documents\TrafficLight\trafficLight\obj\Debug\trafficLight.csprojResolveAssemblyReference.cache
 A:\Documents\TrafficLight\trafficLight\bin\Debug\trafficLight.exe.CodeAnalysisLog.xml
 A:\Documents\TrafficLight\trafficLight\bin\Debug\trafficLight.exe.lastcodeanalysissucceeded
+A:\Documents\TrafficLight\trafficLight\bin\Debug\TrafficLights.exe.config
