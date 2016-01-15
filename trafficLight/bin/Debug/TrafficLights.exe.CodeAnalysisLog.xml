@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="trafficlights.exe">
      <Messages>
-      <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+      <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
        <Issue Certainty="95" Level="Error">使用 CLSCompliant(true)来标记 'TrafficLights.exe'，因为它公开外部可见的类型。</Issue>
       </Message>
      </Messages>
@@ -15,24 +15,31 @@
        <Types>
         <Type Name="MainWindow" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#LightSelected(System.Object,System.Windows.RoutedEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+          <Member Name="#ProceedTimer()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="393">'MainWindow.LightSelected(object, RoutedEventArgs)' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="167">从未使用 'MainWindow.ProceedTimer()' 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#RestartTimer()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="132">'MainWindow.RestartTimer()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="129">'MainWindow.RestartTimer()' 似乎没有上游 public 或 protected 调用方。</Issue>
             </Message>
            </Messages>
           </Member>
-          <Member Name="#StrValue(System.Boolean,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+          <Member Name="#SetXStatusLables()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="1#" TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="Breaking">
-             <Issue Certainty="95" Level="Error" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="266">更改成员名或参数名 'strValue'，使两者能相互区分。</Issue>
+            <Message Id="x" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="380">'MainWindow.SetXStatusLables()' 声明类型为 'int' 的变量 'x'，但从未使用过该变量或只对它进行过赋值。请使用此变量或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#StopTimer()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight" File="MainWindow.xaml.cs" Line="159">从未使用 'MainWindow.StopTimer()' 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Issue>
             </Message>
            </Messages>
           </Member>
@@ -40,29 +47,155 @@
         </Type>
         <Type Name="TrafficLightsTime" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+          <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
            <Issue Certainty="75" Level="Warning">'TrafficLightsTime' 是显然没有实例化过的内部类。如果是这样，请从程序集内移除该代码。如果此内部类只用于包含静态方法，请考虑添加私有构造函数，以阻止编译器生成默认构造函数。</Issue>
           </Message>
          </Messages>
          <Members>
+          <Member Name="#addTimeResult01" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult01' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addTimeResult02" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult02' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addTimeResult03" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult03' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addTimeResult11" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult11' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addTimeResult12" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult12' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addTimeResult13" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.addTimeResult13' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#afterCurStatus" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.afterCurStatus' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
           <Member Name="#AllLightUpColor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="298">'TrafficLightsTime.AllLightUpColor()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="624">'TrafficLightsTime.AllLightUpColor()' 似乎没有上游 public 或 protected 调用方。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#beforeCurStatus" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.beforeCurStatus' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#ColorToTextString(System.Windows.Media.Color)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message Id="status" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="577">'TrafficLightsTime.ColorToTextString(Color)' 声明类型为 'string' 的变量 'status'，但从未使用过该变量或只对它进行过赋值。请使用此变量或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#f_sLightRuntime" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.f_sLightRuntime' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#firstLightRuntime1" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.firstLightRuntime1' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#IsGreenLight()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="393">从未使用 'TrafficLightsTime.IsGreenLight()' 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Issue>
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="A:\Documents\TrafficLight\trafficLight\TrafficLightsTime" File="TrafficLightsTime.cs" Line="614">从未使用 'TrafficLightsTime.IsGreenLight()' 的“this”参数(Visual Basic 中为“Me”)。根据需要，将成员标记为 static (Visual Basic 中为“Shared”)，或者在方法体或至少一个属性访问器中使用“this”/“Me”。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#lightFlicker" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.lightFlicker' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#oneLightUp" Kind="Field" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-14 10:56:16Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
              <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.oneLightUp' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#secondLightRuntime1" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.secondLightRuntime1' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#sumInterval" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.sumInterval' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#t_fLightRuntime" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.t_fLightRuntime' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#xCurStatus" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.xCurStatus' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#xCurStatusTimeLeft" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.xCurStatusTimeLeft' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#xTrafficLightsTime2" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2016-01-15 14:41:04Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="Warning">似乎从未使用过字段 'TrafficLightsTime.xTrafficLightsTime2' 或只对它进行过赋值。请使用此字段或将它移除。</Issue>
             </Message>
            </Messages>
           </Member>
@@ -126,15 +259,15 @@
    <MessageLevel Certainty="95">Warning</MessageLevel>
    <File Name="performancerules.dll" Version="14.0.0.0" />
   </Rule>
-  <Rule TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719">
-   <Name>参数名不应与成员名冲突</Name>
-   <Description>参数名应有别于成员名。</Description>
-   <Resolution Name="Default">更改成员名或参数名 {0}，使两者能相互区分。</Resolution>
+  <Rule TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804">
+   <Name>移除未使用的局部变量</Name>
+   <Description>移除方法实现中未使用过的或只赋过值的局部变量。</Description>
+   <Resolution Name="Default">{0} 声明类型为 {2} 的变量 {1}，但从未使用过该变量或只对它进行过赋值。请使用此变量或将它移除。</Resolution>
    <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182252.aspx</Url>
+   <Url>http://msdn.microsoft.com/library/ms182278.aspx</Url>
    <Email>[none]</Email>
-   <MessageLevel Certainty="95">Error</MessageLevel>
-   <File Name="namingrules.dll" Version="14.0.0.0" />
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="14.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

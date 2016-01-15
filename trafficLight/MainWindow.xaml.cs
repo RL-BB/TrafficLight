@@ -12,14 +12,6 @@ namespace TrafficLights
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        //两个个计时器数组，分别都含有四个元素
-        //0对应btnOPen_Click事件开启的计时器，
-        //public DispatcherTimer[] mainCycleTimer;
-        //public DispatcherTimer[] unitCycleTimer;
-        private DispatcherTimer mainCycleTimer = new DispatcherTimer();
-        private DispatcherTimer unitCycleTimer = new DispatcherTimer();
-
         //窗口初始化时 bool变量默认值为false
         private bool firstClick = !false;
 
@@ -44,22 +36,22 @@ namespace TrafficLights
 
             InitializeComponent();
             //TrafficLightsTime.ReadLightCd(redCount.Text);
-            mainCycleTimer.Tick += MainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
-            unitCycleTimer.Tick += UnitCycleTimer_Tick;
+            TrafficLightsTime.mainCycleTimer.Tick += MainCycleTimer_Tick;//delegate ['delɪgət] 委托  EventHandler<>  委托的意义是啥？
+            TrafficLightsTime.unitCycleTimer.Tick += UnitCycleTimer_Tick;
 
         }
 
         void RunTrafficLight()
         {
             InitializePerLightRunTime(chooseLightColor.SelectedIndex);//***初始化Interval；如果没有此行，就获取不到每个交通灯对应的倒计时时间<==>Interval=0；***
-            mainCycleTimer.Start();
+            TrafficLightsTime.mainCycleTimer.Start();
             TrafficLightsTime.InitializeParamsInMainTimer();
             //主计时器要考虑副计时器的延时时间不？1000ms的出现是因为计时器的延迟（halfSecondCycleTimer每次Tick会有10ms-20ms的延迟）
             //mainCycleTimer.Interval = TimeSpan.FromMilliseconds((TrafficLightsTime.firstLightRuntime + TrafficLightsTime.secondLightRuntime + TrafficLightsTime.thirdLightRuntime) * 1000 + 1000);
-            mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
+            TrafficLightsTime.mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
 
-            unitCycleTimer.Start();
-            unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
+            TrafficLightsTime.unitCycleTimer.Start();
+            TrafficLightsTime.unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
         }
 
 
@@ -82,7 +74,9 @@ namespace TrafficLights
         /// </summary>
         private void InitializePerLightRunTime(int selectedIndex)
         {
+
             ValueLightsText();
+
             string rName = redCount.Name;
             string yName = yellowCount.Name;
             string gName = greenCount.Name;
@@ -90,6 +84,9 @@ namespace TrafficLights
             //redCount.Text=
 
         }
+        /// <summary>
+        /// 给三个用来设置红绿灯运行时间的TextBox.Text赋值
+        /// </summary>
         private void ValueLightsText()
         {
             redCount.Text = TrafficLightsTime.RdLightCd(redCount.Name).ToString();
@@ -160,21 +157,19 @@ namespace TrafficLights
         /// </summary>
         private void StopTimer()
         {
-            unitCycleTimer.IsEnabled = false;
-            mainCycleTimer.IsEnabled = false;
+            TrafficLightsTime.unitCycleTimer.IsEnabled = false;
+            TrafficLightsTime.mainCycleTimer.IsEnabled = false;
         }
         /// <summary>
         /// Restart Timer，具体操作为给Timer.IsEnabled赋值为ture<==>Timer.Start()
         /// </summary>
         private void ProceedTimer()
         {
-            mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
+            TrafficLightsTime.mainCycleTimer.Interval = TimeSpan.FromMilliseconds(TrafficLightsTime.trafficLightsTime * 1000 + 1000);
             //unitCycleTimer.Interval = TimeSpan.FromMilliseconds(500);//0.5s=500ms
-            mainCycleTimer.IsEnabled = !false;
-            unitCycleTimer.IsEnabled = !false;
+            TrafficLightsTime.mainCycleTimer.IsEnabled = !false;
+            TrafficLightsTime.unitCycleTimer.IsEnabled = !false;
         }
-
-
 
         private static bool IsInputTextSuitable(string textAfter)
         {
@@ -244,9 +239,9 @@ namespace TrafficLights
             bool greenCountChanged = IsTextChanged(tempTextGreenBefore, tempTextGreenAfter);
 
             //把更改后的内容保存到App.config中
-            string rCount = StrValue(redCountChanged, tempTextRedAfter);
-            string yCount = StrValue(yellowCountChangded, tempTextYellowAfter);
-            string gCount = StrValue(greenCountChanged, tempTextGreenAfter);
+            string rCount = TrafficLightsTime.IsValueChanged(redCountChanged, tempTextRedAfter);
+            string yCount = TrafficLightsTime.IsValueChanged(yellowCountChangded, tempTextYellowAfter);
+            string gCount = TrafficLightsTime.IsValueChanged(greenCountChanged, tempTextGreenAfter);
             TrafficLightsTime.WrtLightCd(rCount, yCount, gCount);
 
 
@@ -262,15 +257,7 @@ namespace TrafficLights
             SetLightTimeBtn.Foreground = new SolidColorBrush(TrafficLightsTime.Green);
         }
 
-        public static string StrValue(bool isChanged, string strValue)
-        {
-            string returnValue = null;
-            if (isChanged)
-            {
-                returnValue = strValue;
-            }
-            return returnValue;
-        }
+
 
         /// <summary>
         /// Occurs when the keyboard is focused on this element
@@ -383,23 +370,98 @@ namespace TrafficLights
             }
         }
 
-
         /// <summary>
-        /// ComboBox中选择某种颜色的灯的时候开始
+        /// 设置"周期""afterCurStatusColor.Tostring()""beforeCurStatusColor.ToString()""xStatusColor.ToString()"
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LightSelected(object sender, RoutedEventArgs e)
+        private void SetXStatusLables()
         {
-            StopTimer();
-            ComboBoxItem cbItem = sender as ComboBoxItem;
-            LightsColor(cbItem.Content.ToString());//设置灯和文本的颜色
-            //2016/01/11 待加入：在选择变换的灯时，立即把对应的颜色跳转过来         
-            if (!firstClick)
+            //***beforeCurStatusTime----xCurStatusTime-----afterCurStatusTime***//
+            int v = TrafficLightsTime.validTime;
+            int x = TrafficLightsTime.xCurStatusTime;
+            int a = TrafficLightsTime.afterXCurStatusTime;
+            int b = TrafficLightsTime.beforeXCurStatusTime;
+            int tL1 = TrafficLightsTime.trafficLightsTime1;
+
+            if (TrafficLightsTime.addTime >= tL1)
             {
-                RestartTimer();
+                LblContent3.Content = "周期";
+                LblNum3.Content = TrafficLightsTime.nCycle.ToString("000") + "个";
+
+                //addTime = addTimeMW * 2;
+                //nCycle = addTime / trafficLightsTime * 2;
+                //validTime = addTime % trafficLightsTime * 2;
+
+                LblContent0.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.afterXCurStatusColor);
+                LblContent1.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.beforeXCurStatusColor);
+                LblContent2.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.xCurStatusColor);
+                if ((v >= 0) && (v <= a))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(v).ToString("000") + "秒";
+                    LblNum1.Content = "000秒";
+                    LblNum2.Content = "000秒";
+                }
+                else if ((v > a) && (v <= (a + b)))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(a).ToString("000") + "秒";
+                    LblNum1.Content = TrafficLightsTime.calculate(v - a).ToString("000") + "秒";
+                    LblNum2.Content = "000秒";
+
+                }
+                else if ((v > (a + b)) && (v < tL1))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(a).ToString("000") + "秒";
+                    LblNum1.Content = TrafficLightsTime.calculate(b).ToString("000") + "秒";
+                    LblNum2.Content = TrafficLightsTime.calculate(tL1 - a - b).ToString("000") + "秒";
+                }
+            }
+            else
+            {
+                //Lbl0.Content = "周期";
+                //LblNum0.Content = TrafficLightsTime.nCycle.ToString("000") + "个";
+
+                //addTime = addTimeMW * 2;
+                //nCycle = addTime / trafficLightsTime * 2;
+                //validTime = addTime % trafficLightsTime * 2;
+
+                LblContent0.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.afterXCurStatusColor);
+                LblContent1.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.beforeXCurStatusColor);
+                LblContent2.Content = TrafficLightsTime.ColorToTextString(TrafficLightsTime.xCurStatusColor);
+                if ((v >= 0) && (v <= a))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(v).ToString("000") + "秒";
+                    LblNum1.Content = "000" + "秒";
+                    LblNum2.Content = "000" + "秒";
+                }
+                else if ((v > a) && (v <= (a + b)))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(a).ToString("000") + "秒";
+                    LblNum1.Content = (v - a).ToString("000") + "秒";
+                    LblNum2.Content = "000" + "秒";
+
+                }
+                else if ((v > (a + b)) && (v < tL1))
+                {
+                    LblNum0.Content = TrafficLightsTime.calculate(a).ToString("000") + "秒";
+                    LblNum1.Content = TrafficLightsTime.calculate(b).ToString("000") + "秒";
+                    LblNum2.Content = TrafficLightsTime.calculate(tL1 - a - b).ToString("000") + "秒";
+                }
             }
         }
 
+        private void AddTimeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            int addTime;
+            //没有不能转换为数字、输入数值大小等问题
+            if (AddTimeTbx.Text==null)
+            {
+                addTime = 0;
+            }
+            else
+            {
+                 addTime = Convert.ToInt32(AddTimeTbx.Text);
+            }
+            TrafficLightsTime.GetAddTimeParamsValue(addTime);
+            SetXStatusLables();
+        }
     }
 }

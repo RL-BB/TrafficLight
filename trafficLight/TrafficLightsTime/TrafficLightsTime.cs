@@ -1,6 +1,7 @@
 ﻿using System.Windows.Media;
 using System;
 using System.Configuration;
+using System.Windows.Threading;
 
 
 namespace TrafficLights
@@ -17,12 +18,40 @@ namespace TrafficLights
         public static Color Green = Color.FromRgb(0, 255, 0);
         public static Color Gray = Color.FromRgb(86, 86, 86);
 
-
+        public static DispatcherTimer mainCycleTimer = new DispatcherTimer();
+        public static DispatcherTimer unitCycleTimer = new DispatcherTimer();
         //first second third是在ComboBox.SelectedIndx对应的颜色为first，
         //按红绿灯变化的顺序其他两种颜色的灯分别对应为second third
         public static int firstLightRuntime;
         public static int secondLightRuntime;
         public static int thirdLightRuntime;
+        /// <summary>
+        /// flicker ['flɪkɚ] 闪烁，闪光 倒计时文本闪烁倒计时，每0.5s一次
+        /// </summary>
+        public static int lightFlicker;
+
+        public static int s_tLightRuntime;
+        public static int t_fLightRuntime;
+        public static int f_sLightRuntime;
+        /// <summary>
+        /// 交通灯运行周期时间：firstLightRuntime+secondLightRuntime+thirdLightTime
+        /// </summary>
+        public static int trafficLightsTime;
+
+        //分别对对应灯实际运行时间的两倍，Runtime1当常量使用，Runtime2当Countdown使用
+        /// <summary>
+        /// 当做常量使用    默认值（30+5+15）*2==100
+        /// </summary>
+        public static int trafficLightsTime1;
+        public static int trafficLightsTime2;
+
+        public static int firstLightRuntime1;
+        public static int firstLightRuntime2;
+        public static int secondLightRuntime1;
+        public static int secondLightRuntime2;
+        public static int thirdLightRuntime1;
+        public static int thirdLightRuntime2;
+
         //当前灯状态倒计时
         public static int countdownToUI;
 
@@ -47,41 +76,10 @@ namespace TrafficLights
         /// </summary>
         public static Color textFontColor;
 
-        public static int s_tLightRuntime;
-        //public static int t_fLightRuntime;
-        //public static int f_sLightRuntime;
-        /// <summary>
-        /// 交通灯运行周期时间：firstLightRuntime+secondLightRuntime+gTime
-        /// </summary>
-        public static int trafficLightsTime;
-        /// <summary>
-        /// trafficLightsTime*2 默认为（30+5+15）*2==100
-        /// </summary>
-        public static int trafficLightsTime2;
 
-        //public static int firstLightRuntime1;
-        /// <summary>
-        /// redLightTime*2 默认为30s*2=60
-        /// </summary>
-        public static int firstLightRuntime2;
-        /// <summary>
-        /// 黄灯计时时间，默认为5s
-        /// </summary>
-
-        //下两行代码不要删除为了理解第三行而存在
-        //public static int secondLightRuntime1;
-        public static int secondLightRuntime2;
-        public static int thirdLightRuntime1;
-        /// <summary>
-        /// greenLightTime*2 默认为15s*2=30
-        /// </summary>
-        public static int thirdLightRuntime2;
         private string oneLightUp;
 
-        /// <summary>
-        /// flicker ['flɪkɚ] 闪烁，闪光 倒计时文本闪烁倒计时，每0.5s一次
-        /// </summary>
-        //public static int lightFlicker;
+
 
         /// <summary>
         /// ComboBox.SelectedIndex确定的情况下，交通灯亮起的第一盏灯为：0,red;1,yellow;2,green;
@@ -184,13 +182,14 @@ namespace TrafficLights
             }
         }
         /// <summary>
-        /// 字体颜色
+        /// 当前灯状态，后5s内的动画
         /// </summary>
         /// <param name="tempTime">当前状态灯的运行时间，后5s为动画</param>
         /// <param name="frontColor">当前状态灯的颜色</param>
         /// <param name="lateColor">下一灯的颜色</param>
         public static void TextFontColor(int tempTime, Color frontColor, Color lateColor)
         {
+            xCurStatusColor = frontColor;//当前处于的状态
             if (tempTime >= 10)
             {
                 textFontColor = frontColor;
@@ -214,43 +213,76 @@ namespace TrafficLights
         /// <param name="selectedIndex">ComboBox.SelectedIndex</param>
         public static void LightsUp(int selectedIndex)
         {
+            xTrafficLightsTime2 = trafficLightsTime2;
             //使用此函数时，需要提前把将用到的参数准备好，
             //包括：firstLightUpColor、secondLightUpColor、thirdLightUpColor
             //灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
             if (trafficLightsTime2 > s_tLightRuntime)
             {
+                #region 重构之前的语句：对方法LightsUp(int,curColor,afterColor)的理解。勿删
+                //FirstLightUpColor(selectedIndex);//灯的颜色
+                //TextFontColor(firstLightRuntime2, firstLightUpColor, secondLightUpColor);//字体颜色（包括后5s的动画）
+                //countdownToUI = DblCountdownToUI(firstLightRuntime2);//倒计时
+                //trafficLightsTime2--;//自减，为进下次循环处理数据
+                //firstLightRuntime2--;
+                #endregion
                 FirstLightUpColor(selectedIndex);//灯的颜色
-                TextFontColor(firstLightRuntime2, firstLightUpColor, secondLightUpColor);//字体颜色（包括后5s的动画）
-                countdownToUI = DblCountdownToUI(firstLightRuntime2);//倒计时
-                trafficLightsTime2--;//自减，为进下次循环处理数据
-                firstLightRuntime2--;
+                LightsUp(firstLightRuntime2, firstLightUpColor, secondLightUpColor);
             }
             else if ((trafficLightsTime2 <= s_tLightRuntime) && (trafficLightsTime2 > thirdLightRuntime1))
             {//灯的颜色、字体颜色（包括后5s动画）、倒计时、为下次循环准备的数据
                 SecondLightUpColor(selectedIndex);
-                TextFontColor(secondLightRuntime2, secondLightUpColor, thirdLightUpColor);
-                countdownToUI = DblCountdownToUI(secondLightRuntime2);
-                trafficLightsTime2--;
-                secondLightRuntime2--;
+                LightsUp(secondLightRuntime2, secondLightUpColor, thirdLightUpColor);
             }
             else if (trafficLightsTime2 <= thirdLightRuntime1)
             {
                 ThirdLightUpColor(selectedIndex);
-                TextFontColor(thirdLightRuntime2, thirdLightUpColor, firstLightUpColor);
-                countdownToUI = DblCountdownToUI(thirdLightRuntime2);
-                trafficLightsTime2--;
-                thirdLightRuntime2--;
+                LightsUp(thirdLightRuntime2, thirdLightUpColor, firstLightUpColor);
             }
         }
-        private static int DblCountdownToUI(int countdownTime)
+        /// <summary>
+        /// 当前样色的灯的Counttime及自减&&字体动画&&
+        /// trafficLightsTime2自减&&当前倒计时时间CountdownToUI&&
+        /// 赋值给xCurStatusTime
+        /// </summary>
+        /// <param name="curLightRuntime2"></param>
+        /// <param name="curLightColor"></param>
+        /// <param name="afterLightColor"></param>
+        private static int LightsUp(int curLightRuntime2, Color curLightColor, Color afterLightColor)
         {
-            return (countdownTime + 1) / 2;
+            xCurStatusTime = curLightRuntime2;
+            TextFontColor(curLightRuntime2, curLightColor, afterLightColor);
+            countdownToUI = DblCountdownToUI(curLightRuntime2);
+            //curLightRuntime2--;//值类型，引用类型
+            if (trafficLightsTime2 > s_tLightRuntime)
+            {
+                xCurStatusTimeLeft = firstLightRuntime2;
+                trafficLightsTime2--;
+                return firstLightRuntime2--;
+            }
+            else if ((trafficLightsTime2 <= s_tLightRuntime) && (trafficLightsTime2 > thirdLightRuntime1))
+            {
+                xCurStatusTimeLeft = secondLightRuntime2;
+                trafficLightsTime2--;
+                return secondLightRuntime2--;
+            }
+            else if (trafficLightsTime2 <= thirdLightRuntime1)
+            {
+                xCurStatusTimeLeft = thirdLightRuntime2;
+
+                trafficLightsTime2--;
+                return thirdLightRuntime2--;
+            }
+            else
+            {
+                trafficLightsTime2--;
+                return 110;
+            }
+
         }
-        public static int TrafficLightsRuntime()
-        {
-            trafficLightsTime = firstLightRuntime + secondLightRuntime + thirdLightRuntime;
-            return trafficLightsTime;
-        }
+
+
+
 
         /// <summary>
         /// 设置mainTimer.Tick所用的数据:
@@ -268,13 +300,29 @@ namespace TrafficLights
             firstLightRuntime2 = firstLightRuntime * 2;
             secondLightRuntime2 = secondLightRuntime * 2;
             thirdLightRuntime2 = thirdLightRuntime * 2;
+
+            trafficLightsTime1 = trafficLightsTime * 2;
             trafficLightsTime2 = trafficLightsTime * 2;
 
-            //强制转换至某一颜色的灯后，会用到的变量
+            //亮起的second和third灯运行时间的和
             s_tLightRuntime = (secondLightRuntime + thirdLightRuntime) * 2;
-            //t_fLightRuntime = (thirdLightRuntime + firstLightRuntime) * 2;
-            //f_sLightRuntime = (firstLightRuntime + secondLightRuntime) * 2;
+            t_fLightRuntime = (thirdLightRuntime + firstLightRuntime) * 2;
+            f_sLightRuntime = (firstLightRuntime + secondLightRuntime) * 2;
         }
+        /// <summary>
+        /// 三个cd 之和 ==Sum
+        /// </summary>
+        /// <returns>三个cd之和 当做常量使用</returns>
+        public static int TrafficLightsRuntime()
+        {
+            trafficLightsTime = firstLightRuntime + secondLightRuntime + thirdLightRuntime;
+            return trafficLightsTime;
+        }
+        private static int DblCountdownToUI(int countdownTime)
+        {
+            return (countdownTime + 1) / 2;
+        }
+
 
         private static void RedLightUpColor()
         {
@@ -294,12 +342,7 @@ namespace TrafficLights
             yLColor = Gray;
             gLColor = Green;
         }
-        private static void AllLightUpColor()
-        {
-            rLColor = Red;
-            yLColor = Yellow;
-            gLColor = Green;
-        }
+
 
         /// <summary>
         /// 获得数字：把字符串转换为数字，不可转化为数字时返回0
@@ -318,19 +361,78 @@ namespace TrafficLights
                 return Convert.ToInt32(tbText);
             }
         }
+        /// <summary>
+        /// 一个值如果改变，则返回改变后的值strValue，没有则返回null；
+        /// </summary>
+        /// <param name="isChanged">是否改变了</param>
+        /// <param name="strValue">改变的值or ＮＵＬＬ</param>
+        /// <returns></returns>
+        public static string IsValueChanged(bool isChanged, string strValue)
+        {
+            string returnValue = null;
+            if (isChanged)
+            {
+                returnValue = strValue;
+            }
+            return returnValue;
+        }
 
 
-        //读config文件，赋值给RedCount、YellowCount、GreenCount
+        /// <summary>
+        /// 根据ComboBox.SelectedIndex值：0、1、2,the firstLightUp Color 分别为：红、黄、绿
+        /// get everyLightup cd Time
+        /// </summary>
+        /// <param name="selectedIndex">ComboBox.SelectedIndex</param>
+        /// <param name="rName">红灯</param>
+        /// <param name="yName">黄灯</param>
+        /// <param name="gName">绿灯</param>
+        public static void InitializePerLightRunTime(int selectedIndex, string rName, string yName, string gName)
+        {
+            //RdAllLightsCd(string fName, string sName, string tName)
+            switch (selectedIndex)
+            {
+                case 0://灯亮起的顺序：红、黄、绿
+                    RdAllLightsCd(rName, yName, gName);
+                    break;
+                case 1://灯亮起的顺序：黄、绿、红
+                    RdAllLightsCd(yName, gName, rName);
+                    break;
+                case 2://灯亮起的顺序：绿、红、黄
+                    RdAllLightsCd(gName, rName, yName);
+                    break;
+                default://灯亮起的顺序：红、黄、绿
+                    RdAllLightsCd(rName, yName, gName);
+                    break;
+            }
+        }
+
+        public static void RdAllLightsCd(string fName, string sName, string tName)
+        {
+            firstLightRuntime = RdLightCd(fName);
+            secondLightRuntime = RdLightCd(sName);
+            thirdLightRuntime = RdLightCd(tName);
+        }
+        /// <summary>
+        /// 读config文件，用来给RedCount、YellowCount、GreenCount赋值
+        /// </summary>
+        /// <param name="lightCount">appsettings 中的Key</param>
+        /// <returns></returns>
         public static int RdLightCd(string lightCount)
         {//
             var strCountdown = ConfigurationManager.AppSettings[lightCount];
             return Convert.ToInt32(strCountdown);
         }
-        public static void WrtLightCd(string rCount,string yCount,string gCount)
+        /// <summary>
+        /// 设置红绿灯的时间
+        /// </summary>
+        /// <param name="rCount"></param>
+        /// <param name="yCount"></param>
+        /// <param name="gCount"></param>
+        public static void WrtLightCd(string rCount, string yCount, string gCount)
         {
             //string sectionName = "appSettings";
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            if (rCount!=null)
+            if (rCount != null)
             {
                 config.AppSettings.Settings["redCount"].Value = rCount;
             }
@@ -353,32 +455,151 @@ namespace TrafficLights
 
 
 
-        public static void InitializePerLightRunTime(int selectedIndex,string rName,string yName,string gName)
+        //单位均为0.5s。
+        public static int xCurStatusTimeLeft;//当前周期运行至的数字（从高到底）
+        public static int xCurStatusTime;
+        public static int beforeXCurStatusTime;
+        public static int afterXCurStatusTime;
+        /// <summary>
+        /// xTrafficLightsTime2=trafficLightsTime2
+        /// </summary>
+        public static int xTrafficLightsTime2;
+
+        public string xCurStatus;
+        public string beforeCurStatus;
+        public string afterCurStatus;
+        public string addTimeResult01;
+        public string addTimeResult02;
+        public string addTimeResult03;
+        public string addTimeResult11;
+        public string addTimeResult12;
+        public string addTimeResult13;
+
+        public static int sumInterval;
+        public static int addTime;
+        /// <summary>
+        /// 当addTime小于sumInterval的时候，validTime=addTime
+        /// </summary>
+        public static int validTime;//=addTime%sumInterval
+        /// <summary>
+        /// 经历过了几个周期(afterXStatus+beforeXStatus+Xstatus).Time
+        /// </summary>
+        public static int nCycle;//=addTime/sumInterval;
+
+        //当前字体的主颜色，用来判断是哪个灯在亮
+        public static Color xCurStatusColor;
+        public static Color beforeXCurStatusColor;
+        public static Color afterXCurStatusColor;
+
+
+        public static void GetAddTimeParamsValue(int addTimeMW)
         {
-           
-            switch (selectedIndex)
+            GetCurStatusColor();
+
+            addTime = addTimeMW * 2;
+            nCycle = addTime / trafficLightsTime1;
+            validTime = addTime % trafficLightsTime1;
+
+            if ((trafficLightsTime2+1) > s_tLightRuntime)
             {
-                case 0:
-                    RdAllLightsCd(rName, yName, gName);
-                    break;
-                case 1:
-                    RdAllLightsCd(yName, gName, rName);
-                    break;
-                case 2:
-                    RdAllLightsCd(gName, rName, yName);
-                    break;
-                default:
-                    RdAllLightsCd(rName, yName, gName);
-                    break;
+                ConfirmXStatusIndex(firstLightRuntime, secondLightRuntime, thirdLightRuntime);
+            }
+            else if (((trafficLightsTime2 + 1) <= s_tLightRuntime) && ((trafficLightsTime2 + 1) > thirdLightRuntime1))
+            {
+                ConfirmXStatusIndex(secondLightRuntime, thirdLightRuntime, firstLightRuntime);
+            }
+            else if ((trafficLightsTime2 + 1) <= thirdLightRuntime1)
+            {
+                ConfirmXStatusIndex(thirdLightRuntime, firstLightRuntime, secondLightRuntime);
+            }
+            //xCurStatusTime = fTime;
+            //afterCurStatusTime = sTime;
+            //beforeCurStatusTime = tTime;
+
+            //if (nCycle == 0)
+            //{
+            //    if (validTime <= afterXCurStatusTime)
+            //    {
+            //    }
+            //    else if ((validTime > afterXCurStatusTime) && (validTime <= (afterXCurStatusTime + beforeXCurStatusTime)))
+            //    {
+            //    }
+            //    else if ((validTime > (afterXCurStatusTime + beforeXCurStatusTime)) && (validTime < trafficLightsTime * 2))
+            //    {
+            //    }
+            //}
+            //else if (nCycle > 0)
+            //{
+
+            //}
+
+        }
+        /// <summary>
+        /// 判断xCurStatus对应的序号及runtime(秒)，如：firstLightUpRuntime，secondLightUpRuntime,thirdLightUpRuntime
+        /// </summary>
+        /// <param name="fTime"></param>
+        /// <param name="sTime"></param>
+        /// <param name="tTime"></param>
+        private static void ConfirmXStatusIndex(int fTime, int sTime, int tTime)
+        {
+            xCurStatusTime = fTime*2;
+            afterXCurStatusTime = sTime*2;
+            beforeXCurStatusTime = tTime*2;
+        }
+        /// <summary>
+        /// 判断该当前的状态(xStatus)的颜色，推断出各Status对应的颜色
+        /// </summary>
+        public static void GetCurStatusColor()
+        {
+            if (xCurStatusColor == Red)
+            {
+                ConfirmXStatusColor(Green, Yellow);
+            }
+            else if (xCurStatusColor == Yellow)
+            {
+                ConfirmXStatusColor(Green, Red);
+            }
+            else if (xCurStatusColor == Green)
+            {
+                ConfirmXStatusColor(Red, Yellow);
             }
         }
-
-        public static void RdAllLightsCd(string fName, string sName, string tName)
+        private static void ConfirmXStatusColor(Color beforeColor, Color afterColor)
         {
-            firstLightRuntime = RdLightCd(fName);
-            secondLightRuntime = RdLightCd(sName);
-            thirdLightRuntime = RdLightCd(tName);
+            beforeXCurStatusColor = beforeColor;
+            afterXCurStatusColor = afterColor;
         }
+        public static string ColorToTextString( Color statusColor)
+        {
+            string status ;
+            if (statusColor == Red)
+            {
+                return status = "红灯";
+            }
+            else if (statusColor == Yellow)
+            {
+                return status = "黄灯";
+            }
+            else if (statusColor == Green)
+            {
+                return status = "绿灯";
+            }
+            else
+            {
+                //处理意外情况
+                return "110";
+            }
+        }
+        /// <summary>
+        /// 处理数据：(num+1)/2
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static int calculate(int num)
+        {
+            return (num + 1) / 2;
+        }
+
 
 
 
@@ -391,14 +612,19 @@ namespace TrafficLights
         /// <returns></returns>
         public bool IsGreenLight()
         {
-
             bool isGreenlight = false;
-            ////if (LightUpColor() == "绿色")
-            //if (oneLightUp == "绿色")//
-            //{
-            //    isGreenlight = !false;
-            //}
+            //if (LightUpColor() == "绿色")
+            if (xCurStatusColor == Green)//
+            {
+                isGreenlight = !false;
+            }
             return isGreenlight;
+        }
+        private static void AllLightUpColor()
+        {
+            rLColor = Red;
+            yLColor = Yellow;
+            gLColor = Green;
         }
     }
 }
