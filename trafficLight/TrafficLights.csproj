@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>setup.ico</ApplicationIcon>
+    <ApplicationIcon>www.ico.la_3928f361112e21b2a6601587ebfab5b9_64X64.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -79,7 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TrafficLightsTime\TrafficLightsTime.cs" />
+    <Compile Include="TrafficLightsTime\Lights.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -145,6 +145,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="setup.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="www.ico.la_a76c40de337a937723b6ed21a70e572e_128X128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="64.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="www.ico.la_3928f361112e21b2a6601587ebfab5b9_64X64.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

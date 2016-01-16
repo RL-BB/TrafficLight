@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("setup.ico")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("www.ico.la_3928f361112e21b2a6601587ebfab5b9_64x64.ico")]
 
 
